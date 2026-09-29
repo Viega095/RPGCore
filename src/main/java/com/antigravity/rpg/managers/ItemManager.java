@@ -185,4 +185,8 @@ public class ItemManager implements Manager {
             return RPGClass.NONE;
         }
     }
+
+    public java.util.Set<String> getAllItemIds() {
+        return registeredItems.keySet();
+    }
 }

@@ -5,7 +5,9 @@ public enum Rarity {
     UNCOMMON("§a", 1.2),
     RARE("§9", 1.5),
     EPIC("§5", 2.0),
-    LEGENDARY("§6", 3.0);
+    LEGENDARY("§6", 3.0),
+    MYTHIC("§d", 5.0),
+    ANCIENT("§c", 8.0);
 
     private final String color;
     private final double statMultiplier;

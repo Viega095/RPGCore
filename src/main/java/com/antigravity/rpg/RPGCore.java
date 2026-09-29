@@ -111,6 +111,7 @@ public class RPGCore extends JavaPlugin {
         this.enchantingAltarManager = new com.antigravity.rpg.equipment.EnchantingAltarManager(this);
         this.petCompanionManager = new com.antigravity.rpg.managers.PetCompanionManager(this);
         this.rogueBountyManager = new com.antigravity.rpg.managers.RogueBountyManager(this);
+        this.talentTreeGUI = talentTreeGUI;
 
         getCommand("keystone").setExecutor(new com.antigravity.rpg.commands.KeystoneCommand(this, keystoneDungeonManager));
         getCommand("raid").setExecutor(new com.antigravity.rpg.commands.RaidCommand(this, raidBossEngine));
@@ -118,9 +119,20 @@ public class RPGCore extends JavaPlugin {
         getCommand("pet").setExecutor(new com.antigravity.rpg.commands.PetCommand(this, petCompanionManager));
         getCommand("rpgcontract").setExecutor(new com.antigravity.rpg.commands.BountyContractCommand(this, rogueBountyManager));
 
+        // Set TabCompleters
+        com.antigravity.rpg.commands.RPGTabCompleter rpgTab = new com.antigravity.rpg.commands.RPGTabCompleter(this);
+        getCommand("rpg").setTabCompleter(rpgTab);
+        getCommand("class").setTabCompleter(rpgTab);
+        getCommand("dungeon").setTabCompleter(rpgTab);
+        getCommand("pet").setTabCompleter(rpgTab);
+        getCommand("keystone").setTabCompleter(rpgTab);
+        getCommand("runewords").setTabCompleter(rpgTab);
+        getCommand("rpgcontract").setTabCompleter(rpgTab);
+
         logger.info("RPGCore enabled successfully!");
     }
 
+    private com.antigravity.rpg.gui.TalentTreeGUI talentTreeGUI;
     private com.antigravity.rpg.dungeons.DungeonEngine dungeonEngine;
     private com.antigravity.rpg.equipment.RunewordEngine runewordEngine;
     private com.antigravity.rpg.equipment.ReforgeManager reforgeManager;
@@ -151,6 +163,22 @@ public class RPGCore extends JavaPlugin {
         return managerHandler;
     }
 
+    public ItemManager getItemManager() {
+        return managerHandler.get(ItemManager.class);
+    }
+
+    public MobManager getMobManager() {
+        return managerHandler.get(MobManager.class);
+    }
+
+    public ClassManager getClassManager() {
+        return managerHandler.get(ClassManager.class);
+    }
+
+    public com.antigravity.rpg.gui.TalentTreeGUI getTalentTreeGUI() {
+        return talentTreeGUI;
+    }
+
     public com.antigravity.rpg.dungeons.DungeonEngine getDungeonEngine() {
         return dungeonEngine;
     }
@@ -177,5 +205,17 @@ public class RPGCore extends JavaPlugin {
 
     public com.antigravity.rpg.equipment.SetBonusEngine getSetBonusEngine() {
         return setBonusEngine;
+    }
+
+    public com.antigravity.rpg.equipment.EnchantingAltarManager getEnchantingAltarManager() {
+        return enchantingAltarManager;
+    }
+
+    public com.antigravity.rpg.managers.PetCompanionManager getPetCompanionManager() {
+        return petCompanionManager;
+    }
+
+    public com.antigravity.rpg.managers.RogueBountyManager getRogueBountyManager() {
+        return rogueBountyManager;
     }
 }

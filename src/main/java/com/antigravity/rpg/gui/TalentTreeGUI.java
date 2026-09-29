@@ -84,4 +84,11 @@ public class TalentTreeGUI implements Listener {
             open(player);
         }
     }
+
+    @EventHandler
+    public void onInventoryDrag(org.bukkit.event.inventory.InventoryDragEvent event) {
+        if (event.getView().getTitle().contains("Árbol de Talentos")) {
+            event.setCancelled(true);
+        }
+    }
 }
