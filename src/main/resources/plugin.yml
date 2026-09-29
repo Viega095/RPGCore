@@ -54,6 +54,18 @@ commands:
     description: Spawn world boss raids
     permission: rpg.admin
     usage: /raid spawn
+  altar:
+    description: Ancient mystic relic infusion altar
+    permission: rpg.use
+    usage: /altar
+  pet:
+    description: Summon and manage combat companions
+    permission: rpg.use
+    usage: /pet <summon|dismiss>
+  rpgcontract:
+    description: Rogue assassin mercenary contracts
+    permission: rpg.use
+    usage: /rpgcontract <get|claim>
 
 permissions:
   rpg.admin:

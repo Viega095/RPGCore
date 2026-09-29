@@ -108,9 +108,15 @@ public class RPGCore extends JavaPlugin {
         this.partySynergyEngine = new com.antigravity.rpg.party.PartySynergyEngine(this);
         this.raidBossEngine = new com.antigravity.rpg.bosses.RaidBossEngine(this);
         this.setBonusEngine = new com.antigravity.rpg.equipment.SetBonusEngine(this);
+        this.enchantingAltarManager = new com.antigravity.rpg.equipment.EnchantingAltarManager(this);
+        this.petCompanionManager = new com.antigravity.rpg.managers.PetCompanionManager(this);
+        this.rogueBountyManager = new com.antigravity.rpg.managers.RogueBountyManager(this);
 
         getCommand("keystone").setExecutor(new com.antigravity.rpg.commands.KeystoneCommand(this, keystoneDungeonManager));
         getCommand("raid").setExecutor(new com.antigravity.rpg.commands.RaidCommand(this, raidBossEngine));
+        getCommand("altar").setExecutor(new com.antigravity.rpg.commands.AltarCommand(this, enchantingAltarManager));
+        getCommand("pet").setExecutor(new com.antigravity.rpg.commands.PetCommand(this, petCompanionManager));
+        getCommand("rpgcontract").setExecutor(new com.antigravity.rpg.commands.BountyContractCommand(this, rogueBountyManager));
 
         logger.info("RPGCore enabled successfully!");
     }
@@ -122,6 +128,9 @@ public class RPGCore extends JavaPlugin {
     private com.antigravity.rpg.party.PartySynergyEngine partySynergyEngine;
     private com.antigravity.rpg.bosses.RaidBossEngine raidBossEngine;
     private com.antigravity.rpg.equipment.SetBonusEngine setBonusEngine;
+    private com.antigravity.rpg.equipment.EnchantingAltarManager enchantingAltarManager;
+    private com.antigravity.rpg.managers.PetCompanionManager petCompanionManager;
+    private com.antigravity.rpg.managers.RogueBountyManager rogueBountyManager;
 
     @Override
     public void onDisable() {
