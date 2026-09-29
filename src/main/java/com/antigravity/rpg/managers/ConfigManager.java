@@ -28,7 +28,9 @@ public class ConfigManager implements Manager {
     }
 
     public void loadConfig() {
-        core.saveDefaultConfig();
+        try {
+            core.saveDefaultConfig();
+        } catch (Exception ignored) {}
         core.reloadConfig();
         config = core.getConfig();
     }
@@ -40,7 +42,14 @@ public class ConfigManager implements Manager {
     private void loadItemsConfig() {
         itemsFile = new File(core.getDataFolder(), "items.yml");
         if (!itemsFile.exists()) {
-            core.saveResource("items.yml", false);
+            try {
+                core.saveResource("items.yml", false);
+            } catch (Exception e) {
+                try {
+                    itemsFile.getParentFile().mkdirs();
+                    itemsFile.createNewFile();
+                } catch (IOException ignored) {}
+            }
         }
         itemsConfig = YamlConfiguration.loadConfiguration(itemsFile);
     }

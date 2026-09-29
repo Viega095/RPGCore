@@ -52,13 +52,18 @@ public class MobManager implements Manager {
         return registeredMobs.get(id);
     }
 
-    public void spawnMob(String id, org.bukkit.Location location) {
+    public java.util.Collection<RPGMob> getAllMobs() {
+        return registeredMobs.values();
+    }
+
+    public LivingEntity spawnMob(String id, org.bukkit.Location location) {
         RPGMob rpgMob = registeredMobs.get(id);
         if (rpgMob == null)
-            return;
+            return null;
 
         LivingEntity entity = (LivingEntity) location.getWorld().spawnEntity(location, rpgMob.getType());
         applyMobStats(entity, rpgMob);
+        return entity;
     }
 
     public void applyMobStats(LivingEntity entity, RPGMob rpgMob) {

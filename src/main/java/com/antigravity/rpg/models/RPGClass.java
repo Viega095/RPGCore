@@ -4,5 +4,6 @@ public enum RPGClass {
     NONE,
     WARRIOR,
     MAGE,
-    ARCHER;
+    ARCHER,
+    ASSASSIN;
 }

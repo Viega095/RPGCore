@@ -1,0 +1,40 @@
+# ====================================================
+# RPGCore Configuration
+# ====================================================
+
+settings:
+  # Enable or disable RPG HUD actionbar display
+  hud-enabled: true
+  hud-update-interval-ticks: 20
+
+  # Level progression formula: base_exp * (level ^ exponent)
+  leveling:
+    base-exp: 100
+    exponent: 1.5
+    max-level: 100
+
+  # Stat scaling per attribute point
+  stats:
+    hp-per-vitality: 10.0
+    mana-per-intelligence: 10.0
+    damage-per-strength: 1.5
+    crit-chance-per-agility: 0.002
+    defense-per-endurance: 1.0
+
+  # Blacksmith configuration
+  blacksmith:
+    max-enhancement-level: 15
+    base-cost: 1000.0
+    cost-multiplier-per-level: 1.5
+
+  # Dungeons & Keystone configuration
+  dungeons:
+    default-time-limit-seconds: 300
+    max-keystone-level: 15
+
+# Messages Configuration
+messages:
+  prefix: "§8[§6RPGCore§8] "
+  no-permission: "§cNo tienes permisos para ejecutar este comando."
+  level-up: "§a§l¡SUBISTE DE NIVEL! §7Ahora eres nivel §e{level}§7!"
+  dungeon-complete: "§6§l¡MAZMORRA COMPLETADA! §7Has recibido recompensas épicas."

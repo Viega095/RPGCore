@@ -1,0 +1,39 @@
+# ====================================================
+# RPGCore Items Configuration
+# ====================================================
+
+items:
+  iron_sword_warrior:
+    material: IRON_SWORD
+    display_name: "Espada del Guerrero Novato"
+    rarity: COMMON
+    level_req: 1
+    class_req: WARRIOR
+    gem_slots: 1
+    stats:
+      strength: 5.0
+      defense: 2.0
+
+  blaze_rod_mage:
+    material: BLAZE_ROD
+    display_name: "Báculo de Llamas Primordiales"
+    rarity: RARE
+    level_req: 5
+    class_req: MAGE
+    gem_slots: 2
+    stats:
+      intelligence: 10.0
+      mana: 50.0
+
+  abyssal_blade:
+    material: NETHERITE_SWORD
+    display_name: "Hoja de las Profundidades Abisales"
+    rarity: MYTHIC
+    level_req: 20
+    class_req: WARRIOR
+    gem_slots: 3
+    stats:
+      damage: 45.0
+      strength: 25.0
+      crit_chance: 0.15
+      life_steal: 0.08

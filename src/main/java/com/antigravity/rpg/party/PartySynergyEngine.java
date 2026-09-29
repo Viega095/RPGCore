@@ -26,9 +26,9 @@ public class PartySynergyEngine {
         attacker.sendMessage(ChatColor.AQUA + "❄💥 ¡COMBO DE SINERGIA: SHATTER! (300% Daño en Área: " +
                 String.format("%.1f", aoeDamage) + ")");
 
-        for (LivingEntity nearby : loc.getWorld().getNearbyLivingEntities(loc, 5.0)) {
-            if (!nearby.equals(attacker) && !(nearby instanceof Player)) {
-                nearby.damage(aoeDamage, attacker);
+        for (org.bukkit.entity.Entity nearby : loc.getWorld().getNearbyEntities(loc, 5.0, 5.0, 5.0)) {
+            if (nearby instanceof LivingEntity && !nearby.equals(attacker) && !(nearby instanceof Player)) {
+                ((LivingEntity) nearby).damage(aoeDamage, attacker);
             }
         }
     }
@@ -39,10 +39,10 @@ public class PartySynergyEngine {
         loc.getWorld().playSound(loc, Sound.ENTITY_BLAZE_SHOOT, 1.2f, 1f);
 
         attacker.sendMessage(ChatColor.GOLD + "🔥🌪 ¡COMBO DE SINERGIA: TORMENTA DE FUEGO!");
-        for (LivingEntity nearby : loc.getWorld().getNearbyLivingEntities(loc, 4.0)) {
-            if (!nearby.equals(attacker) && !(nearby instanceof Player)) {
+        for (org.bukkit.entity.Entity nearby : loc.getWorld().getNearbyEntities(loc, 4.0, 4.0, 4.0)) {
+            if (nearby instanceof LivingEntity && !nearby.equals(attacker) && !(nearby instanceof Player)) {
                 nearby.setFireTicks(100);
-                nearby.damage(150.0, attacker);
+                ((LivingEntity) nearby).damage(150.0, attacker);
             }
         }
     }

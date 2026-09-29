@@ -65,9 +65,11 @@ public class SetBonusEngine {
             int count = entry.getValue();
 
             if (count >= 4) {
-                player.sendActionBar(ChatColor.GOLD + "✦ [Set 4/4: " + set.name + "] " + set.fullSetBonus);
+                player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,
+                        net.md_5.bungee.api.chat.TextComponent.fromLegacyText(ChatColor.GOLD + "✦ [Set 4/4: " + set.name + "] " + set.fullSetBonus));
             } else if (count >= 2) {
-                player.sendActionBar(ChatColor.YELLOW + "✦ [Set 2/4: " + set.name + "] " + set.twoPieceBonus);
+                player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,
+                        net.md_5.bungee.api.chat.TextComponent.fromLegacyText(ChatColor.YELLOW + "✦ [Set 2/4: " + set.name + "] " + set.twoPieceBonus));
             }
         }
     }

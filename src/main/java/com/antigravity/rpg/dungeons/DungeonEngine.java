@@ -105,9 +105,10 @@ public class DungeonEngine {
                 session.timeRemaining--;
 
                 // Actionbar status
-                player.sendActionBar(ChatColor.RED + "⚡ Oleada: " + session.currentWave + "/" + session.maxWaves +
+                player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,
+                        net.md_5.bungee.api.chat.TextComponent.fromLegacyText(ChatColor.RED + "⚡ Oleada: " + session.currentWave + "/" + session.maxWaves +
                         " §8| §eEnemigos restantes: " + getAliveCount(session) +
-                        " §8| §cTiempo: " + session.timeRemaining + "s");
+                        " §8| §cTiempo: " + session.timeRemaining + "s"));
 
                 // Check wave clear
                 session.spawnedMobs.removeIf(e -> e.isDead() || !e.isValid());
@@ -172,7 +173,7 @@ public class DungeonEngine {
         Collection<RPGMob> allMobs = mobManager.getAllMobs();
         if (allMobs.isEmpty()) return null;
         List<RPGMob> list = new ArrayList<>(allMobs);
-        return list.get(ThreadLocalRandom.current().nextInt(list.size()));
+        return list.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(list.size()));
     }
 
     public void completeDungeon(DungeonSession session) {
@@ -191,8 +192,10 @@ public class DungeonEngine {
         // Dungeon Chest Reward Drops
         RPGItem rewardItem = itemManager.getItem("abyssal_blade");
         if (rewardItem != null) {
-            ItemStack stack = itemManager.createItemStack(rewardItem);
-            player.getInventory().addItem(stack);
+            ItemStack stack = itemManager.createItemStack("abyssal_blade");
+            if (stack != null) {
+                player.getInventory().addItem(stack);
+            }
             player.sendMessage(ChatColor.AQUA + "🎁 Recompensa obtenida: " + rewardItem.getDisplayName());
         }
     }
