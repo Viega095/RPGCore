@@ -98,6 +98,24 @@ public class AdminCommand implements CommandExecutor {
             return true;
         }
 
+        if (sub.equals("socket") || sub.equals("gemsocket")) {
+            if (sender instanceof Player player) {
+                if (core.getGemSocketingGUI() != null) {
+                    core.getGemSocketingGUI().open(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("stats")) {
+            if (sender instanceof Player player) {
+                if (core.getAttributePointManager() != null) {
+                    core.getAttributePointManager().openStatsGUI(player);
+                }
+            }
+            return true;
+        }
+
         // Admin commands
         if (!sender.hasPermission("rpg.admin")) {
             sender.sendMessage(MessageUtils.color("&cNo tienes permiso para ejecutar comandos administrativos."));
@@ -105,6 +123,30 @@ public class AdminCommand implements CommandExecutor {
         }
 
         switch (sub) {
+            case "spawnelite":
+                if (!(sender instanceof Player pElite)) {
+                    sender.sendMessage("Solo jugadores.");
+                    return true;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(MessageUtils.color("&cUso: /rpg spawnelite <id> [affix]"));
+                    return true;
+                }
+                String eMobId = args[1];
+                EliteMobAffixEngine.Affix affix = null;
+                if (args.length >= 3) {
+                    try {
+                        affix = EliteMobAffixEngine.Affix.valueOf(args[2].toUpperCase());
+                    } catch (Exception ignored) {}
+                }
+                if (affix != null) {
+                    core.getEliteMobAffixEngine().spawnEliteMob(pElite.getLocation(), eMobId, affix);
+                } else {
+                    core.getEliteMobAffixEngine().spawnEliteMob(pElite.getLocation(), eMobId);
+                }
+                sender.sendMessage(MessageUtils.color("&6✦ Monstruo Élite invocado con afijos elementales!"));
+                break;
+
             case "addxp":
                 if (args.length < 3) {
                     sender.sendMessage(MessageUtils.color("&cUso: /rpg addxp <jugador> <cantidad>"));
@@ -191,6 +233,8 @@ public class AdminCommand implements CommandExecutor {
         player.sendMessage(ChatColor.GRAY + "Haz clic en las opciones interactivas para probarlas:");
 
         sendClickable(player, "§6▶ §eSelección de Clases RPG §7(/class)", "/class", "§aElige tu clase: Guerrero, Mago, Arquero, etc.");
+        sendClickable(player, "§6▶ §eAsignación de Atributos §7(/stats)", "/stats", "§aDistribuye puntos de Fuerza, Inteligencia, Destreza...");
+        sendClickable(player, "§6▶ §eEngarce y Fusión de Gemas §7(/gemsocket)", "/gemsocket", "§aIncrusta gemas en objetos o fusiónalas");
         sendClickable(player, "§6▶ §eÁrbol de Talentos §7(/talents)", "/talents", "§aDesbloquea especializaciones y bonos pasivos");
         sendClickable(player, "§6▶ §eAltar de Fusión de Reliquias §7(/altar)", "/altar", "§aImbuye armas con daño sagrado o ígneo");
         sendClickable(player, "§6▶ §eYunque de Forja y Mejora §7(/forge)", "/forge", "§aMejora armas de +1 a +10");
@@ -201,6 +245,8 @@ public class AdminCommand implements CommandExecutor {
         if (player.hasPermission("rpg.admin")) {
             player.sendMessage("");
             player.sendMessage(ChatColor.LIGHT_PURPLE + "⚡ [COMANDOS DE ADMIN Y TESTING]");
+            sendClickable(player, "§d• Spawnear Élite Ígneo (Molten)", "/rpg spawnelite zombie_lvl1 MOLTEN", "§eSpawnear zombie élite con rastro de fuego");
+            sendClickable(player, "§d• Spawnear Élite Vórtice (Vortex)", "/rpg spawnelite skeleton_lvl5 VORTEX", "§eSpawnear esqueleto élite con tirón de vórtice");
             sendClickable(player, "§d• Dar Espada Vampírica Legendaria", "/rpg item vampiric_blade", "§eRecibir Vampiric Blade con Omnivampirismo");
             sendClickable(player, "§d• Spawnear Zombie RPG Lv.1", "/rpg spawnmob zombie_lvl1", "§eSpawnear mob con estadísticas personalizadas");
             sendClickable(player, "§d• Invocar Jefe de Incursión", "/rpg spawnboss INFERNAL_DRAGON", "§eInvocar Dragón Infernal con telegrafiado de ataques");

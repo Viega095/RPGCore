@@ -27,9 +27,9 @@ public class RPGTabCompleter implements TabCompleter {
 
         if (cmdName.equals("rpg")) {
             if (args.length == 1) {
-                List<String> list = new ArrayList<>(Arrays.asList("guide", "class", "talents", "dungeon", "altar", "pet", "forge", "reforge"));
+                List<String> list = new ArrayList<>(Arrays.asList("guide", "class", "talents", "dungeon", "altar", "pet", "forge", "reforge", "socket", "stats"));
                 if (sender.hasPermission("rpg.admin")) {
-                    list.addAll(Arrays.asList("item", "spawnmob", "spawnboss", "addxp", "keystone", "runes"));
+                    list.addAll(Arrays.asList("item", "spawnmob", "spawnboss", "spawnelite", "addxp", "keystone", "runes"));
                 }
                 return filter(list, args[0]);
             }
@@ -38,7 +38,7 @@ public class RPGTabCompleter implements TabCompleter {
                 if (sub.equals("item") && sender.hasPermission("rpg.admin")) {
                     return filter(new ArrayList<>(core.getItemManager().getAllItemIds()), args[1]);
                 }
-                if (sub.equals("spawnmob") && sender.hasPermission("rpg.admin")) {
+                if ((sub.equals("spawnmob") || sub.equals("spawnelite")) && sender.hasPermission("rpg.admin")) {
                     return filter(new ArrayList<>(core.getMobManager().getAllMobIds()), args[1]);
                 }
                 if (sub.equals("spawnboss") && sender.hasPermission("rpg.admin")) {
@@ -62,6 +62,9 @@ public class RPGTabCompleter implements TabCompleter {
             }
             if (args.length == 3) {
                 String sub = args[0].toLowerCase();
+                if (sub.equals("spawnelite") && sender.hasPermission("rpg.admin")) {
+                    return filter(Arrays.asList("MOLTEN", "VORTEX", "ELECTRIFIED", "SHIELDED", "VAMPIRIC"), args[2]);
+                }
                 if (sub.equals("item") && sender.hasPermission("rpg.admin")) {
                     return filter(Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()), args[2]);
                 }

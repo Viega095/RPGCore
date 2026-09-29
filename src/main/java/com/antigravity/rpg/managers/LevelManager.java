@@ -42,8 +42,13 @@ public class LevelManager implements Manager {
             newXp -= requiredXp;
             currentLevel++;
             data.setLevel(currentLevel);
-            player.sendMessage("§aLeveled Up! You are now level " + currentLevel);
-            // Play sound or effect
+            player.sendMessage("§a✦ ¡Subiste de nivel! Ahora eres Nivel " + currentLevel + " ✦");
+            AttributePointManager apm = core != null ? core.getManagerHandler().get(AttributePointManager.class) : null;
+            if (apm != null) {
+                apm.addPoints(player.getUniqueId(), 3);
+                player.sendMessage("§e✦ ¡Has recibido §63 Puntos de Atributo§e! Usa §b/stats §epara distribuirlos.");
+            }
+            player.playSound(player.getLocation(), org.bukkit.Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.8f, 1.2f);
             requiredXp = getRequiredXp(currentLevel);
         }
 

@@ -37,6 +37,8 @@ public class RPGCore extends JavaPlugin {
         managerHandler.register(new GemManager());
         managerHandler.register(new BlacksmithManager());
         managerHandler.register(new TalentManager());
+        managerHandler.register(new EliteMobAffixEngine());
+        managerHandler.register(new AttributePointManager());
 
         // Enable Managers
         managerHandler.enable();
@@ -54,6 +56,8 @@ public class RPGCore extends JavaPlugin {
         GemManager gemManager = managerHandler.get(GemManager.class);
         BlacksmithManager blacksmithManager = managerHandler.get(BlacksmithManager.class);
         TalentManager talentManager = managerHandler.get(TalentManager.class);
+        EliteMobAffixEngine eliteMobAffixEngine = managerHandler.get(EliteMobAffixEngine.class);
+        AttributePointManager attributePointManager = managerHandler.get(AttributePointManager.class);
 
         statManager.setPlayerManager(playerManager);
         levelManager.setPlayerManager(playerManager);
@@ -78,6 +82,9 @@ public class RPGCore extends JavaPlugin {
         com.antigravity.rpg.gui.TalentTreeGUI talentTreeGUI = new com.antigravity.rpg.gui.TalentTreeGUI(this, talentManager, playerManager);
         getServer().getPluginManager().registerEvents(talentTreeGUI, this);
 
+        this.gemSocketingGUI = new com.antigravity.rpg.gui.GemSocketingGUI(this, gemManager, itemManager);
+        getServer().getPluginManager().registerEvents(gemSocketingGUI, this);
+
         getServer().getPluginManager()
                 .registerEvents(new com.antigravity.rpg.listeners.PlayerListener(this, playerManager), this);
         com.antigravity.rpg.listeners.ItemListener itemListener = new com.antigravity.rpg.listeners.ItemListener(this,
@@ -94,6 +101,18 @@ public class RPGCore extends JavaPlugin {
         getCommand("gembag").setExecutor(new com.antigravity.rpg.commands.GemBagCommand(this, gemManager));
         getCommand("forge").setExecutor(new com.antigravity.rpg.commands.ForgeCommand(this, blacksmithGUI));
         getCommand("talents").setExecutor(new com.antigravity.rpg.commands.TalentsCommand(talentTreeGUI));
+        getCommand("gemsocket").setExecutor((sender, cmd, label, args) -> {
+            if (sender instanceof org.bukkit.entity.Player p) {
+                gemSocketingGUI.open(p);
+            }
+            return true;
+        });
+        getCommand("stats").setExecutor((sender, cmd, label, args) -> {
+            if (sender instanceof org.bukkit.entity.Player p) {
+                attributePointManager.openStatsGUI(p);
+            }
+            return true;
+        });
 
         this.dungeonEngine = new com.antigravity.rpg.dungeons.DungeonEngine(this, playerManager, mobManager, itemManager);
         this.runewordEngine = new com.antigravity.rpg.equipment.RunewordEngine(this);
@@ -131,6 +150,8 @@ public class RPGCore extends JavaPlugin {
 
         logger.info("RPGCore enabled successfully!");
     }
+
+    private com.antigravity.rpg.gui.GemSocketingGUI gemSocketingGUI;
 
     private com.antigravity.rpg.gui.TalentTreeGUI talentTreeGUI;
     private com.antigravity.rpg.dungeons.DungeonEngine dungeonEngine;
@@ -217,5 +238,17 @@ public class RPGCore extends JavaPlugin {
 
     public com.antigravity.rpg.managers.RogueBountyManager getRogueBountyManager() {
         return rogueBountyManager;
+    }
+
+    public com.antigravity.rpg.gui.GemSocketingGUI getGemSocketingGUI() {
+        return gemSocketingGUI;
+    }
+
+    public com.antigravity.rpg.managers.EliteMobAffixEngine getEliteMobAffixEngine() {
+        return managerHandler.get(com.antigravity.rpg.managers.EliteMobAffixEngine.class);
+    }
+
+    public com.antigravity.rpg.managers.AttributePointManager getAttributePointManager() {
+        return managerHandler.get(com.antigravity.rpg.managers.AttributePointManager.class);
     }
 }

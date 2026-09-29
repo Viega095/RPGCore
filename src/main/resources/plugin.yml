@@ -66,6 +66,14 @@ commands:
     description: Rogue assassin mercenary contracts
     permission: rpg.use
     usage: /rpgcontract <get|claim>
+  gemsocket:
+    description: Socket and fuse RPG gems
+    permission: rpg.use
+    usage: /gemsocket
+  stats:
+    description: Allocate level-up attribute points
+    permission: rpg.use
+    usage: /stats
 
 permissions:
   rpg.admin:

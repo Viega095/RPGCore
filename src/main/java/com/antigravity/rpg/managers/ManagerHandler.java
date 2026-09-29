@@ -45,4 +45,8 @@ public class ManagerHandler {
     public <T extends Manager> T get(Class<T> clazz) {
         return clazz.cast(managers.get(clazz));
     }
+
+    public <T extends Manager> T getManager(Class<T> clazz) {
+        return get(clazz);
+    }
 }
