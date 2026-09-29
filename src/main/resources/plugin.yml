@@ -1,0 +1,64 @@
+name: RPGCore
+version: ${project.version}
+main: com.antigravity.rpg.RPGCore
+api-version: 1.20
+authors: [Antigravity]
+description: A comprehensive RPG plugin.
+
+commands:
+  rpg:
+    description: Main RPG command
+    permission: rpg.use
+    usage: /rpg <subcommand>
+  class:
+    description: Open class selection
+    permission: rpg.use
+    usage: /class
+  skills:
+    description: View skills
+    permission: rpg.use
+    usage: /skills
+  quest:
+    description: Quest log
+    permission: rpg.use
+    usage: /quest
+  gembag:
+    description: Open your gem bag
+    permission: rpg.use
+    usage: /gembag
+  forge:
+    description: Open blacksmith forging menu
+    permission: rpg.use
+    usage: /forge
+  talents:
+    description: Open class talents menu
+    permission: rpg.use
+    usage: /talents
+  dungeon:
+    description: Enter instanced wave rifts and dungeons
+    permission: rpg.use
+    usage: /dungeon <list|enter|leave>
+  runewords:
+    description: Diablo II style Runewords and runes
+    permission: rpg.use
+    usage: /runewords <list|socket|give>
+  reforge:
+    description: Reforge item modifiers and prefixes
+    permission: rpg.use
+    usage: /reforge
+  keystone:
+    description: Mythic+ keystone challenge rifts
+    permission: rpg.use
+    usage: /keystone <give|activate>
+  raid:
+    description: Spawn world boss raids
+    permission: rpg.admin
+    usage: /raid spawn
+
+permissions:
+  rpg.admin:
+    description: Admin access to all RPG features
+    default: op
+  rpg.use:
+    description: Standard user access
+    default: true

@@ -1,0 +1,172 @@
+package com.antigravity.rpg;
+
+import org.bukkit.plugin.java.JavaPlugin;
+import java.util.logging.Logger;
+import com.antigravity.rpg.managers.*;
+
+public class RPGCore extends JavaPlugin {
+
+    private static RPGCore instance;
+    private static Logger logger;
+    private ManagerHandler managerHandler;
+
+    @Override
+    public void onEnable() {
+        instance = this;
+        logger = getLogger();
+
+        logger.info("=============================");
+        logger.info("   RPGCore v" + getDescription().getVersion());
+        logger.info("   Enabling modules...");
+        logger.info("=============================");
+
+        // Initialize ManagerHandler
+        managerHandler = new ManagerHandler(this);
+
+        // Register Managers
+        managerHandler.register(new ConfigManager());
+        managerHandler.register(new PlayerManager());
+        managerHandler.register(new StatManager());
+        managerHandler.register(new LevelManager());
+        managerHandler.register(new ClassManager());
+        managerHandler.register(new SkillManager());
+        managerHandler.register(new ItemManager());
+        managerHandler.register(new MobManager());
+        managerHandler.register(new QuestManager());
+        managerHandler.register(new HUDManager());
+        managerHandler.register(new GemManager());
+        managerHandler.register(new BlacksmithManager());
+        managerHandler.register(new TalentManager());
+
+        // Enable Managers
+        managerHandler.enable();
+
+        // Resolve Dependencies
+        PlayerManager playerManager = managerHandler.get(PlayerManager.class);
+        StatManager statManager = managerHandler.get(StatManager.class);
+        LevelManager levelManager = managerHandler.get(LevelManager.class);
+        ClassManager classManager = managerHandler.get(ClassManager.class);
+        SkillManager skillManager = managerHandler.get(SkillManager.class);
+        ItemManager itemManager = managerHandler.get(ItemManager.class);
+        MobManager mobManager = managerHandler.get(MobManager.class);
+        QuestManager questManager = managerHandler.get(QuestManager.class);
+        HUDManager hudManager = managerHandler.get(HUDManager.class);
+        GemManager gemManager = managerHandler.get(GemManager.class);
+        BlacksmithManager blacksmithManager = managerHandler.get(BlacksmithManager.class);
+        TalentManager talentManager = managerHandler.get(TalentManager.class);
+
+        statManager.setPlayerManager(playerManager);
+        levelManager.setPlayerManager(playerManager);
+        classManager.setManagers(playerManager, statManager);
+        skillManager.setPlayerManager(playerManager);
+        hudManager.setPlayerManager(playerManager);
+        questManager.setManagers(playerManager, levelManager, itemManager);
+        gemManager.setManagers(playerManager, itemManager);
+        blacksmithManager.setItemManager(itemManager);
+        talentManager.setPlayerManager(playerManager);
+
+        // Register Extra Skills
+        skillManager.registerSkill(new com.antigravity.rpg.skills.OmnivampirismSkill());
+        skillManager.registerSkill(new com.antigravity.rpg.skills.FireballSkill());
+        skillManager.registerSkill(new com.antigravity.rpg.skills.DashSkill());
+        skillManager.registerSkill(new com.antigravity.rpg.skills.HealSkill());
+
+        // Register Listeners
+        com.antigravity.rpg.gui.BlacksmithGUI blacksmithGUI = new com.antigravity.rpg.gui.BlacksmithGUI(this, blacksmithManager, itemManager);
+        getServer().getPluginManager().registerEvents(blacksmithGUI, this);
+
+        com.antigravity.rpg.gui.TalentTreeGUI talentTreeGUI = new com.antigravity.rpg.gui.TalentTreeGUI(this, talentManager, playerManager);
+        getServer().getPluginManager().registerEvents(talentTreeGUI, this);
+
+        getServer().getPluginManager()
+                .registerEvents(new com.antigravity.rpg.listeners.PlayerListener(this, playerManager), this);
+        com.antigravity.rpg.listeners.ItemListener itemListener = new com.antigravity.rpg.listeners.ItemListener(this,
+                itemManager, playerManager);
+        itemListener.setSkillManager(skillManager);
+        getServer().getPluginManager().registerEvents(itemListener, this);
+        getServer().getPluginManager().registerEvents(new com.antigravity.rpg.listeners.MobListener(this, mobManager,
+                itemManager, levelManager, questManager), this);
+
+        // Register Commands
+        getCommand("class").setExecutor(new com.antigravity.rpg.commands.ClassCommand(this, classManager));
+        getCommand("rpg").setExecutor(
+                new com.antigravity.rpg.commands.AdminCommand(this, levelManager, itemManager, mobManager));
+        getCommand("gembag").setExecutor(new com.antigravity.rpg.commands.GemBagCommand(this, gemManager));
+        getCommand("forge").setExecutor(new com.antigravity.rpg.commands.ForgeCommand(this, blacksmithGUI));
+        getCommand("talents").setExecutor(new com.antigravity.rpg.commands.TalentsCommand(talentTreeGUI));
+
+        this.dungeonEngine = new com.antigravity.rpg.dungeons.DungeonEngine(this, playerManager, mobManager, itemManager);
+        this.runewordEngine = new com.antigravity.rpg.equipment.RunewordEngine(this);
+        this.reforgeManager = new com.antigravity.rpg.equipment.ReforgeManager(this);
+        this.reforgeManager.setItemManager(itemManager);
+
+        getCommand("dungeon").setExecutor(new com.antigravity.rpg.commands.DungeonCommand(this, dungeonEngine));
+        getCommand("runewords").setExecutor(new com.antigravity.rpg.commands.RunewordCommand(this, runewordEngine));
+        getCommand("reforge").setExecutor(new com.antigravity.rpg.commands.ReforgeCommand(this, reforgeManager));
+
+        this.keystoneDungeonManager = new com.antigravity.rpg.dungeons.KeystoneDungeonManager(this);
+        this.partySynergyEngine = new com.antigravity.rpg.party.PartySynergyEngine(this);
+        this.raidBossEngine = new com.antigravity.rpg.bosses.RaidBossEngine(this);
+        this.setBonusEngine = new com.antigravity.rpg.equipment.SetBonusEngine(this);
+
+        getCommand("keystone").setExecutor(new com.antigravity.rpg.commands.KeystoneCommand(this, keystoneDungeonManager));
+        getCommand("raid").setExecutor(new com.antigravity.rpg.commands.RaidCommand(this, raidBossEngine));
+
+        logger.info("RPGCore enabled successfully!");
+    }
+
+    private com.antigravity.rpg.dungeons.DungeonEngine dungeonEngine;
+    private com.antigravity.rpg.equipment.RunewordEngine runewordEngine;
+    private com.antigravity.rpg.equipment.ReforgeManager reforgeManager;
+    private com.antigravity.rpg.dungeons.KeystoneDungeonManager keystoneDungeonManager;
+    private com.antigravity.rpg.party.PartySynergyEngine partySynergyEngine;
+    private com.antigravity.rpg.bosses.RaidBossEngine raidBossEngine;
+    private com.antigravity.rpg.equipment.SetBonusEngine setBonusEngine;
+
+    @Override
+    public void onDisable() {
+        logger.info("RPGCore disabling...");
+
+        if (managerHandler != null) {
+            managerHandler.disable();
+        }
+
+        logger.info("RPGCore disabled.");
+    }
+
+    public static RPGCore getInstance() {
+        return instance;
+    }
+
+    public ManagerHandler getManagerHandler() {
+        return managerHandler;
+    }
+
+    public com.antigravity.rpg.dungeons.DungeonEngine getDungeonEngine() {
+        return dungeonEngine;
+    }
+
+    public com.antigravity.rpg.equipment.RunewordEngine getRunewordEngine() {
+        return runewordEngine;
+    }
+
+    public com.antigravity.rpg.equipment.ReforgeManager getReforgeManager() {
+        return reforgeManager;
+    }
+
+    public com.antigravity.rpg.dungeons.KeystoneDungeonManager getKeystoneDungeonManager() {
+        return keystoneDungeonManager;
+    }
+
+    public com.antigravity.rpg.party.PartySynergyEngine getPartySynergyEngine() {
+        return partySynergyEngine;
+    }
+
+    public com.antigravity.rpg.bosses.RaidBossEngine getRaidBossEngine() {
+        return raidBossEngine;
+    }
+
+    public com.antigravity.rpg.equipment.SetBonusEngine getSetBonusEngine() {
+        return setBonusEngine;
+    }
+}
