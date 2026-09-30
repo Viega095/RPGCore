@@ -27,7 +27,7 @@ public class RPGTabCompleter implements TabCompleter {
 
         if (cmdName.equals("rpg")) {
             if (args.length == 1) {
-                List<String> list = new ArrayList<>(Arrays.asList("guide", "class", "craft", "crow", "talents", "dungeon", "altar", "pet", "forge", "reforge", "socket", "stats", "abyss", "artifacts"));
+                List<String> list = new ArrayList<>(Arrays.asList("guide", "ascend", "class", "craft", "crow", "talents", "dungeon", "altar", "pet", "forge", "reforge", "socket", "stats", "abyss", "artifacts"));
                 if (sender.hasPermission("rpg.admin")) {
                     list.addAll(Arrays.asList("update", "reload", "item", "spawnmob", "spawnboss", "spawnelite", "addxp", "keystone", "runes"));
                 }

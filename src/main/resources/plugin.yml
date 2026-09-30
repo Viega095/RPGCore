@@ -90,6 +90,10 @@ commands:
     description: Summon the mystic shadow crow quest giver
     permission: rpg.use
     usage: /crow
+  ascend:
+    description: Open class ascension and awakening altar
+    permission: rpg.use
+    usage: /ascend
 
 permissions:
   rpg.admin:

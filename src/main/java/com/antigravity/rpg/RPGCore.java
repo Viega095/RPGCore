@@ -136,6 +136,7 @@ public class RPGCore extends JavaPlugin {
         this.updateManager = new com.antigravity.rpg.updater.RPGUpdateManager(this);
         this.updateManager.startAsyncCheck();
 
+        this.classAscensionManager = new com.antigravity.rpg.managers.ClassAscensionManager(this);
         this.rogueBountyManager = new com.antigravity.rpg.managers.RogueBountyManager(this);
         this.artifactRelicEngine = new com.antigravity.rpg.equipment.ArtifactRelicEngine(this);
         this.customSkillComboEngine = new com.antigravity.rpg.skills.CustomSkillComboEngine(this);
@@ -146,6 +147,7 @@ public class RPGCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.petManagementGUI, this);
         getServer().getPluginManager().registerEvents(this.classCraftingStation, this);
         getServer().getPluginManager().registerEvents(this.mysticCrowQuestGiver, this);
+        getServer().getPluginManager().registerEvents(this.classAscensionManager, this);
         getServer().getPluginManager().registerEvents(this.updateManager, this);
         getServer().getPluginManager().registerEvents(this.artifactRelicEngine, this);
         getServer().getPluginManager().registerEvents(this.customSkillComboEngine, this);
@@ -156,6 +158,15 @@ public class RPGCore extends JavaPlugin {
         getCommand("altar").setExecutor(new com.antigravity.rpg.commands.AltarCommand(this, enchantingAltarManager));
         getCommand("pet").setExecutor(new com.antigravity.rpg.commands.PetCommand(this, petCompanionManager));
         getCommand("rpgcontract").setExecutor(new com.antigravity.rpg.commands.BountyContractCommand(this, rogueBountyManager));
+
+        if (getCommand("ascend") != null) {
+            getCommand("ascend").setExecutor((sender, cmd, label, args) -> {
+                if (sender instanceof org.bukkit.entity.Player p) {
+                    classAscensionManager.openAscensionGUI(p);
+                }
+                return true;
+            });
+        }
 
         if (getCommand("craft") != null) {
             getCommand("craft").setExecutor((sender, cmd, label, args) -> {
@@ -227,6 +238,7 @@ public class RPGCore extends JavaPlugin {
     private com.antigravity.rpg.gui.ClassCraftingStation classCraftingStation;
     private com.antigravity.rpg.managers.MysticCrowQuestGiver mysticCrowQuestGiver;
     private com.antigravity.rpg.updater.RPGUpdateManager updateManager;
+    private com.antigravity.rpg.managers.ClassAscensionManager classAscensionManager;
     private com.antigravity.rpg.managers.RogueBountyManager rogueBountyManager;
     private com.antigravity.rpg.equipment.ArtifactRelicEngine artifactRelicEngine;
     private com.antigravity.rpg.skills.CustomSkillComboEngine customSkillComboEngine;
@@ -345,5 +357,9 @@ public class RPGCore extends JavaPlugin {
 
     public com.antigravity.rpg.dungeons.EndlessTowerAbyss getEndlessTowerAbyss() {
         return endlessTowerAbyss;
+    }
+
+    public com.antigravity.rpg.managers.ClassAscensionManager getClassAscensionManager() {
+        return classAscensionManager;
     }
 }

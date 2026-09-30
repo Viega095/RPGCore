@@ -156,6 +156,15 @@ public class AdminCommand implements CommandExecutor {
             return true;
         }
 
+        if (sub.equals("ascend") || sub.equals("ascension") || sub.equals("awakening")) {
+            if (sender instanceof Player player) {
+                if (core.getClassAscensionManager() != null) {
+                    core.getClassAscensionManager().openAscensionGUI(player);
+                }
+            }
+            return true;
+        }
+
         if (sub.equals("update") || sub.equals("autoupdate")) {
             if (!sender.hasPermission("rpg.admin")) {
                 sender.sendMessage(MessageUtils.color("&cNo tienes permiso para ejecutar comandos administrativos."));
@@ -295,6 +304,7 @@ public class AdminCommand implements CommandExecutor {
         player.sendMessage(ChatColor.GRAY + "Haz clic en las opciones interactivas para probarlas:");
 
         sendClickable(player, "§6▶ §eSelección de Clases RPG §7(/class)", "/class", "§aElige tu clase: Guerrero, Mago, Arquero, etc.");
+        sendClickable(player, "§6▶ §eAltar de Ascensión y Despertar de Clase §7(/ascend)", "/ascend", "§aDespierta tu clase a Berserker, Archimago o Francotirador");
         sendClickable(player, "§6▶ §eForja de Progresión de Clases §7(/craft)", "/craft", "§aForja armamento de Tiers 1 al 5 para tu clase");
         sendClickable(player, "§6▶ §eCuervo Místico de las Sombras §7(/crow)", "/crow", "§aInvoca al emisario de misiones y contratos abisales");
         sendClickable(player, "§6▶ §eAsignación de Atributos §7(/stats)", "/stats", "§aDistribuye puntos de Fuerza, Inteligencia, Destreza...");
