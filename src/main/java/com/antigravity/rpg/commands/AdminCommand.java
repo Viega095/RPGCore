@@ -156,6 +156,28 @@ public class AdminCommand implements CommandExecutor {
             return true;
         }
 
+        if (sub.equals("update") || sub.equals("autoupdate")) {
+            if (!sender.hasPermission("rpg.admin")) {
+                sender.sendMessage(MessageUtils.color("&cNo tienes permiso para ejecutar comandos administrativos."));
+                return true;
+            }
+            if (args.length >= 2 && (args[1].equalsIgnoreCase("apply") || args[1].equalsIgnoreCase("download"))) {
+                core.getUpdateManager().applyAutoUpdate(sender);
+            } else {
+                core.getUpdateManager().checkUpdate(sender, true);
+            }
+            return true;
+        }
+
+        if (sub.equals("reload")) {
+            if (!sender.hasPermission("rpg.admin")) {
+                sender.sendMessage(MessageUtils.color("&cNo tienes permiso para ejecutar comandos administrativos."));
+                return true;
+            }
+            core.getUpdateManager().performLiveReload(sender);
+            return true;
+        }
+
         // Admin commands
         if (!sender.hasPermission("rpg.admin")) {
             sender.sendMessage(MessageUtils.color("&cNo tienes permiso para ejecutar comandos administrativos."));
@@ -289,6 +311,8 @@ public class AdminCommand implements CommandExecutor {
         if (player.hasPermission("rpg.admin")) {
             player.sendMessage("");
             player.sendMessage(ChatColor.LIGHT_PURPLE + "⚡ [COMANDOS DE ADMIN Y TESTING]");
+            sendClickable(player, "§a• Auto-Update / Verificar GitHub", "/rpg update", "§eVerificar y descargar actualizaciones de GitHub");
+            sendClickable(player, "§a• Recarga en Caliente (Hot-Reload)", "/rpg reload", "§eRecargar configuración, módulos y datos sin reiniciar");
             sendClickable(player, "§d• Spawnear Élite Ígneo (Molten)", "/rpg spawnelite zombie_lvl1 MOLTEN", "§eSpawnear zombie élite con rastro de fuego");
             sendClickable(player, "§d• Spawnear Élite Vórtice (Vortex)", "/rpg spawnelite skeleton_lvl5 VORTEX", "§eSpawnear esqueleto élite con tirón de vórtice");
             sendClickable(player, "§d• Dar Espada Vampírica Legendaria", "/rpg item vampiric_blade", "§eRecibir Vampiric Blade con Omnivampirismo");

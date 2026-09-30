@@ -29,12 +29,15 @@ public class RPGTabCompleter implements TabCompleter {
             if (args.length == 1) {
                 List<String> list = new ArrayList<>(Arrays.asList("guide", "class", "craft", "crow", "talents", "dungeon", "altar", "pet", "forge", "reforge", "socket", "stats", "abyss", "artifacts"));
                 if (sender.hasPermission("rpg.admin")) {
-                    list.addAll(Arrays.asList("item", "spawnmob", "spawnboss", "spawnelite", "addxp", "keystone", "runes"));
+                    list.addAll(Arrays.asList("update", "reload", "item", "spawnmob", "spawnboss", "spawnelite", "addxp", "keystone", "runes"));
                 }
                 return filter(list, args[0]);
             }
             if (args.length == 2) {
                 String sub = args[0].toLowerCase();
+                if (sub.equals("update") && sender.hasPermission("rpg.admin")) {
+                    return filter(Arrays.asList("check", "apply", "download"), args[1]);
+                }
                 if (sub.equals("abyss")) {
                     return filter(Arrays.asList("start", "leave", "record"), args[1]);
                 }

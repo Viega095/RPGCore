@@ -133,6 +133,8 @@ public class RPGCore extends JavaPlugin {
         this.petCompanionManager.setPetGUI(this.petManagementGUI);
         this.classCraftingStation = new com.antigravity.rpg.gui.ClassCraftingStation(this);
         this.mysticCrowQuestGiver = new com.antigravity.rpg.managers.MysticCrowQuestGiver(this);
+        this.updateManager = new com.antigravity.rpg.updater.RPGUpdateManager(this);
+        this.updateManager.startAsyncCheck();
 
         this.rogueBountyManager = new com.antigravity.rpg.managers.RogueBountyManager(this);
         this.artifactRelicEngine = new com.antigravity.rpg.equipment.ArtifactRelicEngine(this);
@@ -144,6 +146,7 @@ public class RPGCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.petManagementGUI, this);
         getServer().getPluginManager().registerEvents(this.classCraftingStation, this);
         getServer().getPluginManager().registerEvents(this.mysticCrowQuestGiver, this);
+        getServer().getPluginManager().registerEvents(this.updateManager, this);
         getServer().getPluginManager().registerEvents(this.artifactRelicEngine, this);
         getServer().getPluginManager().registerEvents(this.customSkillComboEngine, this);
         getServer().getPluginManager().registerEvents(this.endlessTowerAbyss, this);
@@ -223,6 +226,7 @@ public class RPGCore extends JavaPlugin {
     private com.antigravity.rpg.gui.PetManagementGUI petManagementGUI;
     private com.antigravity.rpg.gui.ClassCraftingStation classCraftingStation;
     private com.antigravity.rpg.managers.MysticCrowQuestGiver mysticCrowQuestGiver;
+    private com.antigravity.rpg.updater.RPGUpdateManager updateManager;
     private com.antigravity.rpg.managers.RogueBountyManager rogueBountyManager;
     private com.antigravity.rpg.equipment.ArtifactRelicEngine artifactRelicEngine;
     private com.antigravity.rpg.skills.CustomSkillComboEngine customSkillComboEngine;
@@ -333,6 +337,10 @@ public class RPGCore extends JavaPlugin {
 
     public com.antigravity.rpg.managers.MysticCrowQuestGiver getMysticCrowQuestGiver() {
         return mysticCrowQuestGiver;
+    }
+
+    public com.antigravity.rpg.updater.RPGUpdateManager getUpdateManager() {
+        return updateManager;
     }
 
     public com.antigravity.rpg.dungeons.EndlessTowerAbyss getEndlessTowerAbyss() {
