@@ -1,17 +1,18 @@
 package com.antigravity.rpg.dungeons;
 
 import com.antigravity.rpg.RPGCore;
-import com.antigravity.rpg.managers.MobManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,13 +21,16 @@ public class EndlessTowerAbyss implements Listener {
 
     public static class AbyssSession {
         public final Player player;
+        public final Location centerLocation;
         public int currentFloor = 1;
         public final List<UUID> aliveMobs = new ArrayList<>();
         public boolean active = true;
+        public BukkitTask boundaryTask;
 
-        public AbyssSession(Player player, int startingFloor) {
+        public AbyssSession(Player player, int startingFloor, Location centerLocation) {
             this.player = player;
             this.currentFloor = startingFloor;
+            this.centerLocation = centerLocation.clone();
         }
     }
 
@@ -53,7 +57,7 @@ public class EndlessTowerAbyss implements Listener {
         }
 
         int startFloor = 1;
-        AbyssSession session = new AbyssSession(player, startFloor);
+        AbyssSession session = new AbyssSession(player, startFloor, player.getLocation());
         activeSessions.put(player.getUniqueId(), session);
 
         player.sendMessage("§5╔════════════════════════════════════════════════╗");
@@ -62,12 +66,47 @@ public class EndlessTowerAbyss implements Listener {
         player.sendMessage("§7¡Comenzando desafío en el §dPiso " + startFloor + "§7!");
         player.playSound(player.getLocation(), Sound.BLOCK_PORTAL_TRIGGER, 1f, 1.2f);
 
+        // Start Boundary & Containment Task
+        session.boundaryTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!session.active || !player.isOnline()) {
+                    cancel();
+                    return;
+                }
+
+                Location center = session.centerLocation;
+                // Draw circular boundary
+                for (int deg = 0; deg < 360; deg += 18) {
+                    double rad = Math.toRadians(deg);
+                    double bx = center.getX() + 14.0 * Math.cos(rad);
+                    double bz = center.getZ() + 14.0 * Math.sin(rad);
+                    Location pLoc = new Location(center.getWorld(), bx, center.getY() + 0.3, bz);
+                    pLoc.getWorld().spawnParticle(Particle.DRAGON_BREATH, pLoc, 1, 0, 0, 0, 0);
+                }
+
+                // Check and contain mobs + force player aggro
+                for (UUID mobId : session.aliveMobs) {
+                    org.bukkit.entity.Entity e = Bukkit.getEntity(mobId);
+                    if (e instanceof LivingEntity living && living.isValid() && !living.isDead()) {
+                        if (living.getLocation().distance(center) > 13.5) {
+                            living.teleport(center.clone().add((Math.random() - 0.5) * 6, 0, (Math.random() - 0.5) * 6));
+                            living.getWorld().spawnParticle(Particle.PORTAL, living.getLocation(), 15, 0.2, 0.2, 0.2, 0.05);
+                        }
+                        if (living instanceof Mob mobEntity) {
+                            mobEntity.setTarget(player);
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(core, 20L, 20L);
+
         spawnFloorWave(session);
     }
 
     private void spawnFloorWave(AbyssSession session) {
         Player player = session.player;
-        Location spawnCenter = player.getLocation();
+        Location spawnCenter = session.centerLocation;
         int floor = session.currentFloor;
 
         player.sendMessage("§6⚔ ¡Piso " + floor + "! Derrota a todos los enemigos abisales.");
@@ -85,6 +124,9 @@ public class EndlessTowerAbyss implements Listener {
                 boss.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
                 boss.setHealth(hp);
             }
+            if (boss instanceof Mob mob) {
+                mob.setTarget(player);
+            }
             session.aliveMobs.add(boss.getUniqueId());
         } else {
             for (int i = 0; i < mobCount; i++) {
@@ -97,6 +139,9 @@ public class EndlessTowerAbyss implements Listener {
                 if (mob.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null) {
                     mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
                     mob.setHealth(hp);
+                }
+                if (mob instanceof Mob mobEntity) {
+                    mobEntity.setTarget(player);
                 }
                 session.aliveMobs.add(mob.getUniqueId());
             }
@@ -152,6 +197,9 @@ public class EndlessTowerAbyss implements Listener {
         AbyssSession session = activeSessions.remove(player.getUniqueId());
         if (session != null) {
             session.active = false;
+            if (session.boundaryTask != null) {
+                session.boundaryTask.cancel();
+            }
             for (UUID u : session.aliveMobs) {
                 org.bukkit.entity.Entity e = Bukkit.getEntity(u);
                 if (e != null && e.isValid()) e.remove();

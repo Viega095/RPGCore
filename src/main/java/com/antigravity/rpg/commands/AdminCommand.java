@@ -125,6 +125,24 @@ public class AdminCommand implements CommandExecutor {
             return true;
         }
 
+        if (sub.equals("craft") || sub.equals("classcraft")) {
+            if (sender instanceof Player player) {
+                if (core.getClassCraftingStation() != null) {
+                    core.getClassCraftingStation().open(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("crow") || sub.equals("mysticcrow")) {
+            if (sender instanceof Player player) {
+                if (core.getMysticCrowQuestGiver() != null) {
+                    core.getMysticCrowQuestGiver().spawnCrowNearPlayer(player);
+                }
+            }
+            return true;
+        }
+
         if (sub.equals("abyss")) {
             if (sender instanceof Player player) {
                 if (core.getEndlessTowerAbyss() != null) {
@@ -255,14 +273,16 @@ public class AdminCommand implements CommandExecutor {
         player.sendMessage(ChatColor.GRAY + "Haz clic en las opciones interactivas para probarlas:");
 
         sendClickable(player, "§6▶ §eSelección de Clases RPG §7(/class)", "/class", "§aElige tu clase: Guerrero, Mago, Arquero, etc.");
+        sendClickable(player, "§6▶ §eForja de Progresión de Clases §7(/craft)", "/craft", "§aForja armamento de Tiers 1 al 5 para tu clase");
+        sendClickable(player, "§6▶ §eCuervo Místico de las Sombras §7(/crow)", "/crow", "§aInvoca al emisario de misiones y contratos abisales");
         sendClickable(player, "§6▶ §eAsignación de Atributos §7(/stats)", "/stats", "§aDistribuye puntos de Fuerza, Inteligencia, Destreza...");
         sendClickable(player, "§6▶ §eEngarce y Fusión de Gemas §7(/gemsocket)", "/gemsocket", "§aIncrusta gemas en objetos o fusiónalas");
         sendClickable(player, "§6▶ §eÁrbol de Talentos §7(/talents)", "/talents", "§aDesbloquea especializaciones y bonos pasivos");
         sendClickable(player, "§6▶ §eAltar de Fusión de Reliquias §7(/altar)", "/altar", "§aImbuye armas con daño sagrado o ígneo");
         sendClickable(player, "§6▶ §eYunque de Forja y Mejora §7(/forge)", "/forge", "§aMejora armas de +1 a +10");
         sendClickable(player, "§6▶ §eYunque de Reforja de Estadísticas §7(/reforge)", "/reforge", "§aModifica atributos aleatorios de armaduras");
-        sendClickable(player, "§6▶ §eCompañero de Combate Espiritual §7(/pet)", "/pet", "§aInvoca a tu lobo o familiar de combate");
-        sendClickable(player, "§6▶ §eMazmorras Instanciadas §7(/dungeon)", "/dungeon", "§aComienza una incursión en la Cripta Abisal");
+        sendClickable(player, "§6▶ §eCompañero de Combate Espiritual §7(/pet)", "/pet", "§aInvoca a tu lobo o familiar de combate (Shift+Clic para menú)");
+        sendClickable(player, "§6▶ §eMazmorras Instanciadas §7(/dungeon)", "/dungeon", "§aComienza una incursión en la Cripta Abisal (Anillo de partículas)");
         sendClickable(player, "§6▶ §eTorre Infinita del Abismo §7(/abyss)", "/abyss", "§aDesafía oleadas infinitas y jefes cada 5 pisos");
         sendClickable(player, "§6▶ §eReliquias y Artefactos Míticos §7(/artifacts)", "/artifacts", "§aEquipa Corazón del Fénix, Mjölnir o Égida");
 

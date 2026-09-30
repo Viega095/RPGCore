@@ -82,6 +82,14 @@ commands:
     description: Challenge the endless infinite tower abyss
     permission: rpg.use
     usage: /abyss <start|leave|record>
+  craft:
+    description: Open class crafting progression station
+    permission: rpg.use
+    usage: /craft
+  crow:
+    description: Summon the mystic shadow crow quest giver
+    permission: rpg.use
+    usage: /crow
 
 permissions:
   rpg.admin:

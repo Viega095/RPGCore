@@ -129,12 +129,21 @@ public class RPGCore extends JavaPlugin {
         this.setBonusEngine = new com.antigravity.rpg.equipment.SetBonusEngine(this);
         this.enchantingAltarManager = new com.antigravity.rpg.equipment.EnchantingAltarManager(this);
         this.petCompanionManager = new com.antigravity.rpg.managers.PetCompanionManager(this);
+        this.petManagementGUI = new com.antigravity.rpg.gui.PetManagementGUI(this, this.petCompanionManager);
+        this.petCompanionManager.setPetGUI(this.petManagementGUI);
+        this.classCraftingStation = new com.antigravity.rpg.gui.ClassCraftingStation(this);
+        this.mysticCrowQuestGiver = new com.antigravity.rpg.managers.MysticCrowQuestGiver(this);
+
         this.rogueBountyManager = new com.antigravity.rpg.managers.RogueBountyManager(this);
         this.artifactRelicEngine = new com.antigravity.rpg.equipment.ArtifactRelicEngine(this);
         this.customSkillComboEngine = new com.antigravity.rpg.skills.CustomSkillComboEngine(this);
         this.endlessTowerAbyss = new com.antigravity.rpg.dungeons.EndlessTowerAbyss(this);
         this.talentTreeGUI = talentTreeGUI;
 
+        getServer().getPluginManager().registerEvents(this.petCompanionManager, this);
+        getServer().getPluginManager().registerEvents(this.petManagementGUI, this);
+        getServer().getPluginManager().registerEvents(this.classCraftingStation, this);
+        getServer().getPluginManager().registerEvents(this.mysticCrowQuestGiver, this);
         getServer().getPluginManager().registerEvents(this.artifactRelicEngine, this);
         getServer().getPluginManager().registerEvents(this.customSkillComboEngine, this);
         getServer().getPluginManager().registerEvents(this.endlessTowerAbyss, this);
@@ -145,6 +154,22 @@ public class RPGCore extends JavaPlugin {
         getCommand("pet").setExecutor(new com.antigravity.rpg.commands.PetCommand(this, petCompanionManager));
         getCommand("rpgcontract").setExecutor(new com.antigravity.rpg.commands.BountyContractCommand(this, rogueBountyManager));
 
+        if (getCommand("craft") != null) {
+            getCommand("craft").setExecutor((sender, cmd, label, args) -> {
+                if (sender instanceof org.bukkit.entity.Player p) {
+                    classCraftingStation.open(p);
+                }
+                return true;
+            });
+        }
+        if (getCommand("crow") != null) {
+            getCommand("crow").setExecutor((sender, cmd, label, args) -> {
+                if (sender instanceof org.bukkit.entity.Player p) {
+                    mysticCrowQuestGiver.spawnCrowNearPlayer(p);
+                }
+                return true;
+            });
+        }
         if (getCommand("artifacts") != null) {
             getCommand("artifacts").setExecutor((sender, cmd, label, args) -> {
                 if (sender instanceof org.bukkit.entity.Player p) {
@@ -177,6 +202,8 @@ public class RPGCore extends JavaPlugin {
         getCommand("rpgcontract").setTabCompleter(rpgTab);
         if (getCommand("abyss") != null) getCommand("abyss").setTabCompleter(rpgTab);
         if (getCommand("artifacts") != null) getCommand("artifacts").setTabCompleter(rpgTab);
+        if (getCommand("craft") != null) getCommand("craft").setTabCompleter(rpgTab);
+        if (getCommand("crow") != null) getCommand("crow").setTabCompleter(rpgTab);
 
         logger.info("RPGCore enabled successfully!");
     }
@@ -193,6 +220,9 @@ public class RPGCore extends JavaPlugin {
     private com.antigravity.rpg.equipment.SetBonusEngine setBonusEngine;
     private com.antigravity.rpg.equipment.EnchantingAltarManager enchantingAltarManager;
     private com.antigravity.rpg.managers.PetCompanionManager petCompanionManager;
+    private com.antigravity.rpg.gui.PetManagementGUI petManagementGUI;
+    private com.antigravity.rpg.gui.ClassCraftingStation classCraftingStation;
+    private com.antigravity.rpg.managers.MysticCrowQuestGiver mysticCrowQuestGiver;
     private com.antigravity.rpg.managers.RogueBountyManager rogueBountyManager;
     private com.antigravity.rpg.equipment.ArtifactRelicEngine artifactRelicEngine;
     private com.antigravity.rpg.skills.CustomSkillComboEngine customSkillComboEngine;
@@ -291,6 +321,18 @@ public class RPGCore extends JavaPlugin {
 
     public com.antigravity.rpg.skills.CustomSkillComboEngine getCustomSkillComboEngine() {
         return customSkillComboEngine;
+    }
+
+    public com.antigravity.rpg.gui.ClassCraftingStation getClassCraftingStation() {
+        return classCraftingStation;
+    }
+
+    public com.antigravity.rpg.gui.PetManagementGUI getPetManagementGUI() {
+        return petManagementGUI;
+    }
+
+    public com.antigravity.rpg.managers.MysticCrowQuestGiver getMysticCrowQuestGiver() {
+        return mysticCrowQuestGiver;
     }
 
     public com.antigravity.rpg.dungeons.EndlessTowerAbyss getEndlessTowerAbyss() {

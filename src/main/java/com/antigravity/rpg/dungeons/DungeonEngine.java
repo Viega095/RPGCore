@@ -104,6 +104,29 @@ public class DungeonEngine {
 
                 session.timeRemaining--;
 
+                // Render circular arena particle boundary
+                Location center = session.arenaLocation;
+                for (int deg = 0; deg < 360; deg += 18) {
+                    double rad = Math.toRadians(deg);
+                    double bx = center.getX() + 14.0 * Math.cos(rad);
+                    double bz = center.getZ() + 14.0 * Math.sin(rad);
+                    Location pLoc = new Location(center.getWorld(), bx, center.getY() + 0.3, bz);
+                    pLoc.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, pLoc, 1, 0, 0, 0, 0);
+                }
+
+                // Contain mobs and force aggro to the player
+                for (LivingEntity mob : session.spawnedMobs) {
+                    if (mob.isValid() && !mob.isDead()) {
+                        if (mob.getLocation().distance(center) > 13.5) {
+                            mob.teleport(center.clone().add((Math.random() - 0.5) * 6, 0, (Math.random() - 0.5) * 6));
+                            mob.getWorld().spawnParticle(Particle.PORTAL, mob.getLocation(), 15, 0.2, 0.2, 0.2, 0.05);
+                        }
+                        if (mob instanceof org.bukkit.entity.Mob mobEntity) {
+                            mobEntity.setTarget(player);
+                        }
+                    }
+                }
+
                 // Actionbar status
                 player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,
                         net.md_5.bungee.api.chat.TextComponent.fromLegacyText(ChatColor.RED + "⚡ Oleada: " + session.currentWave + "/" + session.maxWaves +
