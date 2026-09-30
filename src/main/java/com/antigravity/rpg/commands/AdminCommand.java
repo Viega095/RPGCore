@@ -45,6 +45,15 @@ public class AdminCommand implements CommandExecutor {
 
         String sub = args[0].toLowerCase();
 
+        if (sub.equals("test") || sub.equals("lab") || sub.equals("demo")) {
+            if (sender instanceof Player player) {
+                if (core.getRPGTestLabGUI() != null) {
+                    core.getRPGTestLabGUI().open(player);
+                }
+            }
+            return true;
+        }
+
         if (sub.equals("class")) {
             if (sender instanceof Player player) {
                 if (args.length >= 2) {
@@ -317,6 +326,7 @@ public class AdminCommand implements CommandExecutor {
         sendClickable(player, "§6▶ §eMazmorras Instanciadas §7(/dungeon)", "/dungeon", "§aComienza una incursión en la Cripta Abisal (Anillo de partículas)");
         sendClickable(player, "§6▶ §eTorre Infinita del Abismo §7(/abyss)", "/abyss", "§aDesafía oleadas infinitas y jefes cada 5 pisos");
         sendClickable(player, "§6▶ §eReliquias y Artefactos Míticos §7(/artifacts)", "/artifacts", "§aEquipa Corazón del Fénix, Mjölnir o Égida");
+        sendClickable(player, "§c🧪 §l[ABRIR PANEL MAESTRO DE PRUEBAS DE RPG GUI]", "/rpg test", "§eHaz clic para abrir el menú con todas las pruebas y eventos RPG");
 
         if (player.hasPermission("rpg.admin")) {
             player.sendMessage("");

@@ -219,9 +219,13 @@ public class RPGCore extends JavaPlugin {
         if (getCommand("craft") != null) getCommand("craft").setTabCompleter(rpgTab);
         if (getCommand("crow") != null) getCommand("crow").setTabCompleter(rpgTab);
 
+        this.rpgTestLabGUI = new com.antigravity.rpg.gui.RPGTestLabGUI(this);
+        getServer().getPluginManager().registerEvents(this.rpgTestLabGUI, this);
+
         logger.info("RPGCore enabled successfully!");
     }
 
+    private com.antigravity.rpg.gui.RPGTestLabGUI rpgTestLabGUI;
     private com.antigravity.rpg.gui.GemSocketingGUI gemSocketingGUI;
 
     private com.antigravity.rpg.gui.TalentTreeGUI talentTreeGUI;
@@ -361,5 +365,9 @@ public class RPGCore extends JavaPlugin {
 
     public com.antigravity.rpg.managers.ClassAscensionManager getClassAscensionManager() {
         return classAscensionManager;
+    }
+
+    public com.antigravity.rpg.gui.RPGTestLabGUI getRPGTestLabGUI() {
+        return rpgTestLabGUI;
     }
 }
