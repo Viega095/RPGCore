@@ -27,7 +27,7 @@ public class RPGTabCompleter implements TabCompleter {
 
         if (cmdName.equals("rpg")) {
             if (args.length == 1) {
-                List<String> list = new ArrayList<>(Arrays.asList("guide", "class", "talents", "dungeon", "altar", "pet", "forge", "reforge", "socket", "stats"));
+                List<String> list = new ArrayList<>(Arrays.asList("guide", "class", "talents", "dungeon", "altar", "pet", "forge", "reforge", "socket", "stats", "abyss", "artifacts"));
                 if (sender.hasPermission("rpg.admin")) {
                     list.addAll(Arrays.asList("item", "spawnmob", "spawnboss", "spawnelite", "addxp", "keystone", "runes"));
                 }
@@ -35,6 +35,9 @@ public class RPGTabCompleter implements TabCompleter {
             }
             if (args.length == 2) {
                 String sub = args[0].toLowerCase();
+                if (sub.equals("abyss")) {
+                    return filter(Arrays.asList("start", "leave", "record"), args[1]);
+                }
                 if (sub.equals("item") && sender.hasPermission("rpg.admin")) {
                     return filter(new ArrayList<>(core.getItemManager().getAllItemIds()), args[1]);
                 }
@@ -75,6 +78,12 @@ public class RPGTabCompleter implements TabCompleter {
                     return Arrays.asList("1", "2", "5", "10", "15");
                 }
             }
+        } else if (cmdName.equals("abyss")) {
+            if (args.length == 1) {
+                return filter(Arrays.asList("start", "leave", "record"), args[0]);
+            }
+        } else if (cmdName.equals("artifacts") || cmdName.equals("relic")) {
+            return new ArrayList<>();
         } else if (cmdName.equals("class")) {
             if (args.length == 1) {
                 return filter(Arrays.stream(RPGClass.values()).map(Enum::name).collect(Collectors.toList()), args[0]);

@@ -76,6 +76,9 @@ public class SkillManager implements Manager {
                 data.setCurrentMana(data.getCurrentMana() - manaCost);
                 setCooldown(player.getUniqueId(), skillName, skill.getCooldown(level));
                 player.sendMessage("§aCast " + skill.getName() + "!");
+                if (core != null && core.getCustomSkillComboEngine() != null) {
+                    core.getCustomSkillComboEngine().recordSkillUsage(player, skillName);
+                }
                 return true;
             }
         }

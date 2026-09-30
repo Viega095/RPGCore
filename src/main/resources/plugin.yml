@@ -74,6 +74,14 @@ commands:
     description: Allocate level-up attribute points
     permission: rpg.use
     usage: /stats
+  artifacts:
+    description: Open relic and legendary artifact equipment GUI
+    permission: rpg.use
+    usage: /artifacts
+  abyss:
+    description: Challenge the endless infinite tower abyss
+    permission: rpg.use
+    usage: /abyss <start|leave|record>
 
 permissions:
   rpg.admin:

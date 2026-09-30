@@ -116,6 +116,28 @@ public class AdminCommand implements CommandExecutor {
             return true;
         }
 
+        if (sub.equals("artifacts") || sub.equals("relic") || sub.equals("relics")) {
+            if (sender instanceof Player player) {
+                if (core.getArtifactRelicEngine() != null) {
+                    core.getArtifactRelicEngine().openGUI(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("abyss")) {
+            if (sender instanceof Player player) {
+                if (core.getEndlessTowerAbyss() != null) {
+                    if (args.length > 1 && args[1].equalsIgnoreCase("leave")) {
+                        core.getEndlessTowerAbyss().leaveAbyss(player);
+                    } else {
+                        core.getEndlessTowerAbyss().startAbyss(player);
+                    }
+                }
+            }
+            return true;
+        }
+
         // Admin commands
         if (!sender.hasPermission("rpg.admin")) {
             sender.sendMessage(MessageUtils.color("&cNo tienes permiso para ejecutar comandos administrativos."));
@@ -241,6 +263,8 @@ public class AdminCommand implements CommandExecutor {
         sendClickable(player, "§6▶ §eYunque de Reforja de Estadísticas §7(/reforge)", "/reforge", "§aModifica atributos aleatorios de armaduras");
         sendClickable(player, "§6▶ §eCompañero de Combate Espiritual §7(/pet)", "/pet", "§aInvoca a tu lobo o familiar de combate");
         sendClickable(player, "§6▶ §eMazmorras Instanciadas §7(/dungeon)", "/dungeon", "§aComienza una incursión en la Cripta Abisal");
+        sendClickable(player, "§6▶ §eTorre Infinita del Abismo §7(/abyss)", "/abyss", "§aDesafía oleadas infinitas y jefes cada 5 pisos");
+        sendClickable(player, "§6▶ §eReliquias y Artefactos Míticos §7(/artifacts)", "/artifacts", "§aEquipa Corazón del Fénix, Mjölnir o Égida");
 
         if (player.hasPermission("rpg.admin")) {
             player.sendMessage("");

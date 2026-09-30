@@ -130,13 +130,41 @@ public class RPGCore extends JavaPlugin {
         this.enchantingAltarManager = new com.antigravity.rpg.equipment.EnchantingAltarManager(this);
         this.petCompanionManager = new com.antigravity.rpg.managers.PetCompanionManager(this);
         this.rogueBountyManager = new com.antigravity.rpg.managers.RogueBountyManager(this);
+        this.artifactRelicEngine = new com.antigravity.rpg.equipment.ArtifactRelicEngine(this);
+        this.customSkillComboEngine = new com.antigravity.rpg.skills.CustomSkillComboEngine(this);
+        this.endlessTowerAbyss = new com.antigravity.rpg.dungeons.EndlessTowerAbyss(this);
         this.talentTreeGUI = talentTreeGUI;
+
+        getServer().getPluginManager().registerEvents(this.artifactRelicEngine, this);
+        getServer().getPluginManager().registerEvents(this.customSkillComboEngine, this);
+        getServer().getPluginManager().registerEvents(this.endlessTowerAbyss, this);
 
         getCommand("keystone").setExecutor(new com.antigravity.rpg.commands.KeystoneCommand(this, keystoneDungeonManager));
         getCommand("raid").setExecutor(new com.antigravity.rpg.commands.RaidCommand(this, raidBossEngine));
         getCommand("altar").setExecutor(new com.antigravity.rpg.commands.AltarCommand(this, enchantingAltarManager));
         getCommand("pet").setExecutor(new com.antigravity.rpg.commands.PetCommand(this, petCompanionManager));
         getCommand("rpgcontract").setExecutor(new com.antigravity.rpg.commands.BountyContractCommand(this, rogueBountyManager));
+
+        if (getCommand("artifacts") != null) {
+            getCommand("artifacts").setExecutor((sender, cmd, label, args) -> {
+                if (sender instanceof org.bukkit.entity.Player p) {
+                    artifactRelicEngine.openGUI(p);
+                }
+                return true;
+            });
+        }
+        if (getCommand("abyss") != null) {
+            getCommand("abyss").setExecutor((sender, cmd, label, args) -> {
+                if (sender instanceof org.bukkit.entity.Player p) {
+                    if (args.length > 0 && args[0].equalsIgnoreCase("leave")) {
+                        endlessTowerAbyss.leaveAbyss(p);
+                    } else {
+                        endlessTowerAbyss.startAbyss(p);
+                    }
+                }
+                return true;
+            });
+        }
 
         // Set TabCompleters
         com.antigravity.rpg.commands.RPGTabCompleter rpgTab = new com.antigravity.rpg.commands.RPGTabCompleter(this);
@@ -147,6 +175,8 @@ public class RPGCore extends JavaPlugin {
         getCommand("keystone").setTabCompleter(rpgTab);
         getCommand("runewords").setTabCompleter(rpgTab);
         getCommand("rpgcontract").setTabCompleter(rpgTab);
+        if (getCommand("abyss") != null) getCommand("abyss").setTabCompleter(rpgTab);
+        if (getCommand("artifacts") != null) getCommand("artifacts").setTabCompleter(rpgTab);
 
         logger.info("RPGCore enabled successfully!");
     }
@@ -164,6 +194,9 @@ public class RPGCore extends JavaPlugin {
     private com.antigravity.rpg.equipment.EnchantingAltarManager enchantingAltarManager;
     private com.antigravity.rpg.managers.PetCompanionManager petCompanionManager;
     private com.antigravity.rpg.managers.RogueBountyManager rogueBountyManager;
+    private com.antigravity.rpg.equipment.ArtifactRelicEngine artifactRelicEngine;
+    private com.antigravity.rpg.skills.CustomSkillComboEngine customSkillComboEngine;
+    private com.antigravity.rpg.dungeons.EndlessTowerAbyss endlessTowerAbyss;
 
     @Override
     public void onDisable() {
@@ -250,5 +283,17 @@ public class RPGCore extends JavaPlugin {
 
     public com.antigravity.rpg.managers.AttributePointManager getAttributePointManager() {
         return managerHandler.get(com.antigravity.rpg.managers.AttributePointManager.class);
+    }
+
+    public com.antigravity.rpg.equipment.ArtifactRelicEngine getArtifactRelicEngine() {
+        return artifactRelicEngine;
+    }
+
+    public com.antigravity.rpg.skills.CustomSkillComboEngine getCustomSkillComboEngine() {
+        return customSkillComboEngine;
+    }
+
+    public com.antigravity.rpg.dungeons.EndlessTowerAbyss getEndlessTowerAbyss() {
+        return endlessTowerAbyss;
     }
 }
