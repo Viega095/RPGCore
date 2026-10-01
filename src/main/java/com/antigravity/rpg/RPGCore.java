@@ -141,6 +141,10 @@ public class RPGCore extends JavaPlugin {
         this.artifactRelicEngine = new com.antigravity.rpg.equipment.ArtifactRelicEngine(this);
         this.customSkillComboEngine = new com.antigravity.rpg.skills.CustomSkillComboEngine(this);
         this.endlessTowerAbyss = new com.antigravity.rpg.dungeons.EndlessTowerAbyss(this);
+        this.astralConstellationEngine = new com.antigravity.rpg.progression.AstralConstellationEngine(this);
+        this.mythicWorldRaidEngine = new com.antigravity.rpg.bosses.MythicWorldRaidEngine(this);
+        this.guildStrongholdSiegeManager = new com.antigravity.rpg.guilds.GuildStrongholdSiegeManager(this);
+        this.dynamicQuestBoard = new com.antigravity.rpg.quests.DynamicQuestBoard(this);
         this.talentTreeGUI = talentTreeGUI;
 
         getServer().getPluginManager().registerEvents(this.petCompanionManager, this);
@@ -152,6 +156,10 @@ public class RPGCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.artifactRelicEngine, this);
         getServer().getPluginManager().registerEvents(this.customSkillComboEngine, this);
         getServer().getPluginManager().registerEvents(this.endlessTowerAbyss, this);
+        getServer().getPluginManager().registerEvents(this.astralConstellationEngine, this);
+        getServer().getPluginManager().registerEvents(this.mythicWorldRaidEngine, this);
+        getServer().getPluginManager().registerEvents(this.guildStrongholdSiegeManager, this);
+        getServer().getPluginManager().registerEvents(this.dynamicQuestBoard, this);
 
         getCommand("keystone").setExecutor(new com.antigravity.rpg.commands.KeystoneCommand(this, keystoneDungeonManager));
         getCommand("raid").setExecutor(new com.antigravity.rpg.commands.RaidCommand(this, raidBossEngine));
@@ -365,6 +373,27 @@ public class RPGCore extends JavaPlugin {
 
     public com.antigravity.rpg.managers.ClassAscensionManager getClassAscensionManager() {
         return classAscensionManager;
+    }
+
+    private com.antigravity.rpg.progression.AstralConstellationEngine astralConstellationEngine;
+    private com.antigravity.rpg.bosses.MythicWorldRaidEngine mythicWorldRaidEngine;
+    private com.antigravity.rpg.guilds.GuildStrongholdSiegeManager guildStrongholdSiegeManager;
+    private com.antigravity.rpg.quests.DynamicQuestBoard dynamicQuestBoard;
+
+    public com.antigravity.rpg.progression.AstralConstellationEngine getAstralConstellationEngine() {
+        return astralConstellationEngine;
+    }
+
+    public com.antigravity.rpg.bosses.MythicWorldRaidEngine getMythicWorldRaidEngine() {
+        return mythicWorldRaidEngine;
+    }
+
+    public com.antigravity.rpg.guilds.GuildStrongholdSiegeManager getGuildStrongholdSiegeManager() {
+        return guildStrongholdSiegeManager;
+    }
+
+    public com.antigravity.rpg.quests.DynamicQuestBoard getDynamicQuestBoard() {
+        return dynamicQuestBoard;
     }
 
     public com.antigravity.rpg.gui.RPGTestLabGUI getRPGTestLabGUI() {

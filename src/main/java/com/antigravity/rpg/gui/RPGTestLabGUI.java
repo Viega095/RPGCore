@@ -72,6 +72,10 @@ public class RPGTestLabGUI implements Listener {
         inv.setItem(16, createBtn(Material.RESPAWN_ANCHOR, "§d🗼 Desafiar Torre Infinita del Abismo",
                 Arrays.asList("§7Desafía la torre con escalado infinito", "§7y jefes de piso cada 5 niveles.", "", "§d▶ Haz clic para desafiar")));
 
+        // Slot 17: Constelaciones Astrales
+        inv.setItem(17, createBtn(Material.NETHER_STAR, "§d🌌 Árbol de Constelaciones Astrales",
+                Arrays.asList("§7Despierta estrellas y pasivas cósmicas", "§7usando Fragmentos Celestiales.", "", "§d▶ Haz clic para abrir")));
+
         // Slot 19: Forja de Progresión de Clases
         inv.setItem(19, createBtn(Material.ANVIL, "§e🛡️ Forja de Progresión de Clases Tiers 1-5",
                 Arrays.asList("§7Abre la estación para forjar armamento", "§7avanzado para cada clase RPG.", "", "§e▶ Haz clic para abrir")));
@@ -100,6 +104,10 @@ public class RPGTestLabGUI implements Listener {
         inv.setItem(25, createBtn(Material.OAK_SAPLING, "§a🌳 Árbol de Talentos de Clase",
                 Arrays.asList("§7Desbloquea habilidades pasivas y", "§7especializaciones de combate.", "", "§a▶ Haz clic para abrir")));
 
+        // Slot 26: Soberano del Vacío Xylar
+        inv.setItem(26, createBtn(Material.WITHER_SKELETON_SKULL, "§5🐉 Invocar Soberano del Vacío Xylar",
+                Arrays.asList("§7Jefe mundial de 3 fases con telegrafiado", "§7de ataques y ranking de daño.", "", "§5▶ Haz clic para invocar")));
+
         // Slot 28: Reliquias y Artefactos Míticos
         inv.setItem(28, createBtn(Material.TOTEM_OF_UNDYING, "§6🏺 Panel de Reliquias y Artefactos",
                 Arrays.asList("§7Equipa el Corazón del Fénix, el", "§7Martillo Mjölnir o la Égida Sagrada.", "", "§6▶ Haz clic para abrir")));
@@ -116,9 +124,9 @@ public class RPGTestLabGUI implements Listener {
         inv.setItem(31, createBtn(Material.DIAMOND_SWORD, "§4⚔️ Dar Espada Vampírica Legendaria",
                 Arrays.asList("§7Recibe la Vampiric Blade con efecto", "§7de Omnivampirismo y robo de vida.", "", "§4▶ Haz clic para recibir")));
 
-        // Slot 32: Contrato de Asesino Renegado
-        inv.setItem(32, createBtn(Material.WRITABLE_BOOK, "§c📜 Obtener Contrato de Caza y Recompensa",
-                Arrays.asList("§7Acepta un contrato de mercenario para", "§7eliminar objetivos por oro y reliquias.", "", "§c▶ Haz clic para obtener")));
+        // Slot 32: Tablón Dinámico de Contratos
+        inv.setItem(32, createBtn(Material.WRITABLE_BOOK, "§c📜 Tablón Dinámico de Contratos",
+                Arrays.asList("§7Acepta contratos rotativos de cacería", "§7y mazmorras por recompensas masivas.", "", "§c▶ Haz clic para abrir")));
 
         // Slot 33: Añadir 10,000 XP de Clase
         inv.setItem(33, createBtn(Material.EXPERIENCE_BOTTLE, "§e📈 Añadir 10,000 XP de Clase",
@@ -127,6 +135,10 @@ public class RPGTestLabGUI implements Listener {
         // Slot 34: Selección de Clases
         inv.setItem(34, createBtn(Material.BEACON, "§b👑 Menú de Selección de Clases",
                 Arrays.asList("§7Cambia tu clase a Guerrero, Mago,", "§7Arquero, Paladín o Asesino.", "", "§b▶ Haz clic para abrir")));
+
+        // Slot 35: Asedios de Fortaleza
+        inv.setItem(35, createBtn(Material.SHIELD, "§6🏰 Asedios de Fortaleza de Clanes",
+                Arrays.asList("§7Reclama balizas y territorios para", "§7obtener bonificaciones de clan.", "", "§6▶ Haz clic para abrir")));
 
         // Slot 48: Auto-Update Check
         inv.setItem(48, createBtn(Material.EXPERIENCE_BOTTLE, "§a🔄 Probar Auto-Update en GitHub",
@@ -213,6 +225,13 @@ public class RPGTestLabGUI implements Listener {
                 player.performCommand("abyss start");
                 break;
 
+            case 17: // Astral Constellations
+                player.closeInventory();
+                if (plugin.getAstralConstellationEngine() != null) {
+                    plugin.getAstralConstellationEngine().openConstellationGUI(player);
+                }
+                break;
+
             case 19: // Craft
                 player.closeInventory();
                 player.performCommand("craft");
@@ -248,6 +267,13 @@ public class RPGTestLabGUI implements Listener {
                 player.performCommand("talents");
                 break;
 
+            case 26: // Void Sovereign Xylar
+                player.closeInventory();
+                if (plugin.getMythicWorldRaidEngine() != null) {
+                    plugin.getMythicWorldRaidEngine().spawnVoidSovereign(player.getLocation());
+                }
+                break;
+
             case 28: // Artifacts
                 player.closeInventory();
                 player.performCommand("artifacts");
@@ -268,9 +294,11 @@ public class RPGTestLabGUI implements Listener {
                 player.performCommand("rpg item vampiric_blade");
                 break;
 
-            case 32: // Contract
+            case 32: // Dynamic Quest Board
                 player.closeInventory();
-                player.performCommand("rpgcontract get");
+                if (plugin.getDynamicQuestBoard() != null) {
+                    plugin.getDynamicQuestBoard().openBoardGUI(player);
+                }
                 break;
 
             case 33: // XP
@@ -284,6 +312,13 @@ public class RPGTestLabGUI implements Listener {
             case 34: // Class Selection
                 player.closeInventory();
                 player.performCommand("class");
+                break;
+
+            case 35: // Guild Stronghold Siege
+                player.closeInventory();
+                if (plugin.getGuildStrongholdSiegeManager() != null) {
+                    plugin.getGuildStrongholdSiegeManager().openStrongholdGUI(player);
+                }
                 break;
 
             case 48: // Update
