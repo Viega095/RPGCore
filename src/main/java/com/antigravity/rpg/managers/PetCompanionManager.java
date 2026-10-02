@@ -3,6 +3,7 @@ package com.antigravity.rpg.managers;
 import com.antigravity.rpg.RPGCore;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -137,6 +138,15 @@ public class PetCompanionManager implements Listener {
             pet.remove();
             player.sendMessage(ChatColor.GRAY + "Tu compañero ha regresado al reino espiritual.");
         }
+    }
+
+    public boolean isPet(Entity entity) {
+        if (entity == null) return false;
+        return activePets.containsValue(entity);
+    }
+
+    public LivingEntity getActivePet(UUID playerUuid) {
+        return activePets.get(playerUuid);
     }
 
     @EventHandler

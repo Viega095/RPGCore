@@ -99,4 +99,30 @@ public class MobListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void onMobTarget(org.bukkit.event.entity.EntityTargetLivingEntityEvent event) {
+        if (event.getTarget() == null) return;
+
+        // If a mob tries to target a player's companion pet
+        if (core.getPetCompanionManager() != null && core.getPetCompanionManager().isPet(event.getTarget())) {
+            // Re-target to owner player or nearest player
+            Player nearestPlayer = null;
+            double nearestDist = 25.0;
+            for (Player p : event.getEntity().getWorld().getPlayers()) {
+                if (!p.isDead() && p.isValid()) {
+                    double dist = p.getLocation().distance(event.getEntity().getLocation());
+                    if (dist < nearestDist) {
+                        nearestDist = dist;
+                        nearestPlayer = p;
+                    }
+                }
+            }
+            if (nearestPlayer != null) {
+                event.setTarget(nearestPlayer);
+            } else {
+                event.setCancelled(true);
+            }
+        }
+    }
 }
