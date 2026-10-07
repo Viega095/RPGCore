@@ -174,6 +174,29 @@ public class AdminCommand implements CommandExecutor {
             return true;
         }
 
+        if (sub.equals("bloodmoon") || sub.equals("lunadesangre")) {
+            if (core.getBloodMoonIncursionEngine() != null) {
+                if (args.length > 1 && args[1].equalsIgnoreCase("stop")) {
+                    core.getBloodMoonIncursionEngine().stopBloodMoon();
+                    sender.sendMessage("§a✔ Incursión de la Luna de Sangre detenida.");
+                } else {
+                    int duration = args.length > 1 ? Integer.parseInt(args[1]) : 180;
+                    core.getBloodMoonIncursionEngine().startBloodMoon(duration);
+                    sender.sendMessage("§4🩸 Incursión de la Luna de Sangre iniciada por " + duration + "s.");
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("citadel") || sub.equals("ciudadela")) {
+            if (sender instanceof Player player) {
+                if (core.getCelestialCitadelDungeon() != null) {
+                    core.getCelestialCitadelDungeon().startCitadel(player);
+                }
+            }
+            return true;
+        }
+
         if (sub.equals("update") || sub.equals("autoupdate")) {
             if (!sender.hasPermission("rpg.admin")) {
                 sender.sendMessage(MessageUtils.color("&cNo tienes permiso para ejecutar comandos administrativos."));

@@ -141,10 +141,11 @@ public class RPGCore extends JavaPlugin {
         this.artifactRelicEngine = new com.antigravity.rpg.equipment.ArtifactRelicEngine(this);
         this.customSkillComboEngine = new com.antigravity.rpg.skills.CustomSkillComboEngine(this);
         this.endlessTowerAbyss = new com.antigravity.rpg.dungeons.EndlessTowerAbyss(this);
-        this.astralConstellationEngine = new com.antigravity.rpg.progression.AstralConstellationEngine(this);
         this.mythicWorldRaidEngine = new com.antigravity.rpg.bosses.MythicWorldRaidEngine(this);
         this.guildStrongholdSiegeManager = new com.antigravity.rpg.guilds.GuildStrongholdSiegeManager(this);
         this.dynamicQuestBoard = new com.antigravity.rpg.quests.DynamicQuestBoard(this);
+        this.bloodMoonIncursionEngine = new com.antigravity.rpg.bosses.BloodMoonIncursionEngine(this);
+        this.celestialCitadelDungeon = new com.antigravity.rpg.dungeons.CelestialCitadelDungeon(this);
         this.talentTreeGUI = talentTreeGUI;
 
         getServer().getPluginManager().registerEvents(this.petCompanionManager, this);
@@ -160,6 +161,8 @@ public class RPGCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.mythicWorldRaidEngine, this);
         getServer().getPluginManager().registerEvents(this.guildStrongholdSiegeManager, this);
         getServer().getPluginManager().registerEvents(this.dynamicQuestBoard, this);
+        getServer().getPluginManager().registerEvents(this.bloodMoonIncursionEngine, this);
+        getServer().getPluginManager().registerEvents(this.celestialCitadelDungeon, this);
 
         getCommand("keystone").setExecutor(new com.antigravity.rpg.commands.KeystoneCommand(this, keystoneDungeonManager));
         getCommand("raid").setExecutor(new com.antigravity.rpg.commands.RaidCommand(this, raidBossEngine));
@@ -255,6 +258,8 @@ public class RPGCore extends JavaPlugin {
     private com.antigravity.rpg.equipment.ArtifactRelicEngine artifactRelicEngine;
     private com.antigravity.rpg.skills.CustomSkillComboEngine customSkillComboEngine;
     private com.antigravity.rpg.dungeons.EndlessTowerAbyss endlessTowerAbyss;
+    private com.antigravity.rpg.bosses.BloodMoonIncursionEngine bloodMoonIncursionEngine;
+    private com.antigravity.rpg.dungeons.CelestialCitadelDungeon celestialCitadelDungeon;
 
     @Override
     public void onDisable() {
@@ -398,5 +403,13 @@ public class RPGCore extends JavaPlugin {
 
     public com.antigravity.rpg.gui.RPGTestLabGUI getRPGTestLabGUI() {
         return rpgTestLabGUI;
+    }
+
+    public com.antigravity.rpg.bosses.BloodMoonIncursionEngine getBloodMoonIncursionEngine() {
+        return bloodMoonIncursionEngine;
+    }
+
+    public com.antigravity.rpg.dungeons.CelestialCitadelDungeon getCelestialCitadelDungeon() {
+        return celestialCitadelDungeon;
     }
 }
