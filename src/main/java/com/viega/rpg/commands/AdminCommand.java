@@ -1,0 +1,386 @@
+package com.viega.rpg.commands;
+
+import com.viega.rpg.RPGCore;
+import com.viega.rpg.managers.*;
+import com.viega.rpg.models.RPGMob;
+import com.viega.rpg.models.RPGClass;
+import com.viega.rpg.utils.MessageUtils;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+public class AdminCommand implements CommandExecutor {
+
+    private final RPGCore core;
+    private final LevelManager levelManager;
+    private final ItemManager itemManager;
+    private final MobManager mobManager;
+
+    public AdminCommand(RPGCore core, LevelManager levelManager, ItemManager itemManager, MobManager mobManager) {
+        this.core = core;
+        this.levelManager = levelManager;
+        this.itemManager = itemManager;
+        this.mobManager = mobManager;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0 || args[0].equalsIgnoreCase("guide") || args[0].equalsIgnoreCase("help")) {
+            if (sender instanceof Player player) {
+                sendInteractiveGuide(player);
+            } else {
+                sender.sendMessage("Uso: /rpg <addxp|item|spawnmob|spawnboss|guide>");
+            }
+            return true;
+        }
+
+        String sub = args[0].toLowerCase();
+
+        if (sub.equals("test") || sub.equals("lab") || sub.equals("demo")) {
+            if (sender instanceof Player player) {
+                if (core.getRPGTestLabGUI() != null) {
+                    core.getRPGTestLabGUI().open(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("guia") || sub.equals("contenido") || sub.equals("compendio")) {
+            if (sender instanceof Player player) {
+                if (core.getRPGContentGuideGUI() != null) {
+                    core.getRPGContentGuideGUI().open(player);
+                } else {
+                    new com.viega.rpg.gui.RPGContentGuideGUI(core).open(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("class")) {
+            if (sender instanceof Player player) {
+                if (args.length >= 2) {
+                    try {
+                        RPGClass chosen = RPGClass.valueOf(args[1].toUpperCase());
+                        core.getClassManager().selectClass(player.getUniqueId(), chosen);
+                        player.sendMessage(MessageUtils.color("&a¡Has seleccionado la clase &e" + chosen.name() + "&a!"));
+                    } catch (IllegalArgumentException e) {
+                        player.sendMessage(MessageUtils.color("&cClase inválida. Opciones: WARRIOR, MAGE, ARCHER, ROGUE, PALADIN, ASSASSIN"));
+                    }
+                } else {
+                    player.sendMessage(MessageUtils.color("&eUsa &6/class <WARRIOR|MAGE|ARCHER|ROGUE|PALADIN|ASSASSIN> &epara cambiar tu clase."));
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("talents")) {
+            if (sender instanceof Player player) {
+                if (core.getTalentTreeGUI() != null) {
+                    core.getTalentTreeGUI().open(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("altar")) {
+            if (sender instanceof Player player) {
+                if (core.getEnchantingAltarManager() != null) {
+                    core.getEnchantingAltarManager().infuseAltar(player, player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand());
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("pet")) {
+            if (sender instanceof Player player) {
+                if (core.getPetCompanionManager() != null) {
+                    core.getPetCompanionManager().summonPet(player, "WOLF");
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("dungeon")) {
+            if (sender instanceof Player player) {
+                if (core.getDungeonEngine() != null) {
+                    core.getDungeonEngine().startDungeon(player, com.viega.rpg.dungeons.DungeonEngine.DungeonDifficulty.CRYPTS_OF_DESPAIR);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("socket") || sub.equals("gemsocket")) {
+            if (sender instanceof Player player) {
+                if (core.getGemSocketingGUI() != null) {
+                    core.getGemSocketingGUI().open(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("stats")) {
+            if (sender instanceof Player player) {
+                if (core.getAttributePointManager() != null) {
+                    core.getAttributePointManager().openStatsGUI(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("artifacts") || sub.equals("relic") || sub.equals("relics")) {
+            if (sender instanceof Player player) {
+                if (core.getArtifactRelicEngine() != null) {
+                    core.getArtifactRelicEngine().openGUI(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("craft") || sub.equals("classcraft")) {
+            if (sender instanceof Player player) {
+                if (core.getClassCraftingStation() != null) {
+                    core.getClassCraftingStation().open(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("crow") || sub.equals("mysticcrow")) {
+            if (sender instanceof Player player) {
+                if (core.getMysticCrowQuestGiver() != null) {
+                    core.getMysticCrowQuestGiver().spawnCrowNearPlayer(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("abyss")) {
+            if (sender instanceof Player player) {
+                if (core.getEndlessTowerAbyss() != null) {
+                    if (args.length > 1 && args[1].equalsIgnoreCase("leave")) {
+                        core.getEndlessTowerAbyss().leaveAbyss(player);
+                    } else {
+                        core.getEndlessTowerAbyss().startAbyss(player);
+                    }
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("ascend") || sub.equals("ascension") || sub.equals("awakening")) {
+            if (sender instanceof Player player) {
+                if (core.getClassAscensionManager() != null) {
+                    core.getClassAscensionManager().openAscensionGUI(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("bloodmoon") || sub.equals("lunadesangre")) {
+            if (core.getBloodMoonIncursionEngine() != null) {
+                if (args.length > 1 && args[1].equalsIgnoreCase("stop")) {
+                    core.getBloodMoonIncursionEngine().stopBloodMoon();
+                    sender.sendMessage("§a✔ Incursión de la Luna de Sangre detenida.");
+                } else {
+                    int duration = args.length > 1 ? Integer.parseInt(args[1]) : 180;
+                    core.getBloodMoonIncursionEngine().startBloodMoon(duration);
+                    sender.sendMessage("§4🩸 Incursión de la Luna de Sangre iniciada por " + duration + "s.");
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("citadel") || sub.equals("ciudadela")) {
+            if (sender instanceof Player player) {
+                if (core.getCelestialCitadelDungeon() != null) {
+                    core.getCelestialCitadelDungeon().startCitadel(player);
+                }
+            }
+            return true;
+        }
+
+        if (sub.equals("update") || sub.equals("autoupdate")) {
+            if (!sender.hasPermission("rpg.admin")) {
+                sender.sendMessage(MessageUtils.color("&cNo tienes permiso para ejecutar comandos administrativos."));
+                return true;
+            }
+            if (args.length >= 2 && (args[1].equalsIgnoreCase("apply") || args[1].equalsIgnoreCase("download"))) {
+                core.getUpdateManager().applyAutoUpdate(sender);
+            } else {
+                core.getUpdateManager().checkUpdate(sender, true);
+            }
+            return true;
+        }
+
+        if (sub.equals("reload")) {
+            if (!sender.hasPermission("rpg.admin")) {
+                sender.sendMessage(MessageUtils.color("&cNo tienes permiso para ejecutar comandos administrativos."));
+                return true;
+            }
+            core.getUpdateManager().performLiveReload(sender);
+            return true;
+        }
+
+        // Admin commands
+        if (!sender.hasPermission("rpg.admin")) {
+            sender.sendMessage(MessageUtils.color("&cNo tienes permiso para ejecutar comandos administrativos."));
+            return true;
+        }
+
+        switch (sub) {
+            case "spawnelite":
+                if (!(sender instanceof Player pElite)) {
+                    sender.sendMessage("Solo jugadores.");
+                    return true;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(MessageUtils.color("&cUso: /rpg spawnelite <id> [affix]"));
+                    return true;
+                }
+                String eMobId = args[1];
+                EliteMobAffixEngine.Affix affix = null;
+                if (args.length >= 3) {
+                    try {
+                        affix = EliteMobAffixEngine.Affix.valueOf(args[2].toUpperCase());
+                    } catch (Exception ignored) {}
+                }
+                if (affix != null) {
+                    core.getEliteMobAffixEngine().spawnEliteMob(pElite.getLocation(), eMobId, affix);
+                } else {
+                    core.getEliteMobAffixEngine().spawnEliteMob(pElite.getLocation(), eMobId);
+                }
+                sender.sendMessage(MessageUtils.color("&6✦ Monstruo Élite invocado con afijos elementales!"));
+                break;
+
+            case "addxp":
+                if (args.length < 3) {
+                    sender.sendMessage(MessageUtils.color("&cUso: /rpg addxp <jugador> <cantidad>"));
+                    return true;
+                }
+                Player target = Bukkit.getPlayer(args[1]);
+                if (target == null) {
+                    sender.sendMessage(MessageUtils.color("&cJugador no encontrado."));
+                    return true;
+                }
+                try {
+                    double amount = Double.parseDouble(args[2]);
+                    levelManager.addXp(target, amount);
+                    sender.sendMessage(MessageUtils.color("&aAñadidos " + amount + " XP a " + target.getName()));
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(MessageUtils.color("&cNúmero inválido."));
+                }
+                break;
+
+            case "item":
+                if (!(sender instanceof Player playerSender)) {
+                    sender.sendMessage("Solo jugadores.");
+                    return true;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(MessageUtils.color("&cUso: /rpg item <id> [jugador]"));
+                    return true;
+                }
+                String itemId = args[1];
+                Player targetPlayer = args.length >= 3 ? Bukkit.getPlayer(args[2]) : playerSender;
+                if (targetPlayer == null) targetPlayer = playerSender;
+
+                ItemStack item = itemManager.createItemStack(itemId);
+                if (item == null) {
+                    sender.sendMessage(MessageUtils.color("&cItem ID no encontrado: " + itemId));
+                    return true;
+                }
+                targetPlayer.getInventory().addItem(item);
+                sender.sendMessage(MessageUtils.color("&aEntregado item RPG: " + itemId + " a " + targetPlayer.getName()));
+                targetPlayer.playSound(targetPlayer.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1.2f);
+                break;
+
+            case "spawnmob":
+                if (!(sender instanceof Player p)) {
+                    sender.sendMessage("Solo jugadores.");
+                    return true;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(MessageUtils.color("&cUso: /rpg spawnmob <id>"));
+                    return true;
+                }
+                String mobId = args[1];
+                RPGMob mob = mobManager.getMob(mobId);
+                if (mob == null) {
+                    sender.sendMessage(MessageUtils.color("&cMob ID no encontrado: " + mobId));
+                    return true;
+                }
+                mobManager.spawnMob(mobId, p.getLocation());
+                sender.sendMessage(MessageUtils.color("&aSpawned RPG Mob: " + mobId));
+                break;
+
+            case "spawnboss":
+                if (!(sender instanceof Player pBoss)) {
+                    sender.sendMessage("Solo jugadores.");
+                    return true;
+                }
+                String bossType = args.length >= 2 ? args[1] : "INFERNAL_DRAGON";
+                core.getRaidBossEngine().spawnWorldBoss(pBoss.getLocation(), bossType, 5000.0);
+                sender.sendMessage(MessageUtils.color("&6✦ Raid Boss " + bossType + " invocado exitosamente!"));
+                break;
+
+            default:
+                sender.sendMessage(MessageUtils.color("&cSubcomando desconocido. Usa /rpg guide"));
+                break;
+        }
+
+        return true;
+    }
+
+    private void sendInteractiveGuide(Player player) {
+        player.sendMessage(ChatColor.GOLD + "╔════════════════════════════════════════════════╗");
+        player.sendMessage(ChatColor.GOLD + "║       " + ChatColor.RED + "⚔ GUÍA MAESTRA DE RPG CORE" + ChatColor.GOLD + "       ║");
+        player.sendMessage(ChatColor.GOLD + "╚════════════════════════════════════════════════╝");
+        player.sendMessage(ChatColor.GRAY + "Haz clic en las opciones interactivas para probarlas:");
+
+        sendClickable(player, "§6▶ §eSelección de Clases RPG §7(/class)", "/class", "§aElige tu clase: Guerrero, Mago, Arquero, etc.");
+        sendClickable(player, "§6▶ §eAltar de Ascensión y Despertar de Clase §7(/ascend)", "/ascend", "§aDespierta tu clase a Berserker, Archimago o Francotirador");
+        sendClickable(player, "§6▶ §eForja de Progresión de Clases §7(/craft)", "/craft", "§aForja armamento de Tiers 1 al 5 para tu clase");
+        sendClickable(player, "§6▶ §eCuervo Místico de las Sombras §7(/crow)", "/crow", "§aInvoca al emisario de misiones y contratos abisales");
+        sendClickable(player, "§6▶ §eAsignación de Atributos §7(/stats)", "/stats", "§aDistribuye puntos de Fuerza, Inteligencia, Destreza...");
+        sendClickable(player, "§6▶ §eEngarce y Fusión de Gemas §7(/gemsocket)", "/gemsocket", "§aIncrusta gemas en objetos o fusiónalas");
+        sendClickable(player, "§6▶ §eÁrbol de Talentos §7(/talents)", "/talents", "§aDesbloquea especializaciones y bonos pasivos");
+        sendClickable(player, "§6▶ §eAltar de Fusión de Reliquias §7(/altar)", "/altar", "§aImbuye armas con daño sagrado o ígneo");
+        sendClickable(player, "§6▶ §eYunque de Forja y Mejora §7(/forge)", "/forge", "§aMejora armas de +1 a +10");
+        sendClickable(player, "§6▶ §eYunque de Reforja de Estadísticas §7(/reforge)", "/reforge", "§aModifica atributos aleatorios de armaduras");
+        sendClickable(player, "§6▶ §eCompañero de Combate Espiritual §7(/pet)", "/pet", "§aInvoca a tu lobo o familiar de combate (Shift+Clic para menú)");
+        sendClickable(player, "§6▶ §eMazmorras Instanciadas §7(/dungeon)", "/dungeon", "§aComienza una incursión en la Cripta Abisal (Anillo de partículas)");
+        sendClickable(player, "§6▶ §eTorre Infinita del Abismo §7(/abyss)", "/abyss", "§aDesafía oleadas infinitas y jefes cada 5 pisos");
+        sendClickable(player, "§6▶ §eReliquias y Artefactos Míticos §7(/artifacts)", "/artifacts", "§aEquipa Corazón del Fénix, Mjölnir o Égida");
+        sendClickable(player, "§c🧪 §l[ABRIR PANEL MAESTRO DE PRUEBAS DE RPG GUI]", "/rpg test", "§eHaz clic para abrir el menú con todas las pruebas y eventos RPG");
+
+        if (player.hasPermission("rpg.admin")) {
+            player.sendMessage("");
+            player.sendMessage(ChatColor.LIGHT_PURPLE + "⚡ [COMANDOS DE ADMIN Y TESTING]");
+            sendClickable(player, "§a• Auto-Update / Verificar GitHub", "/rpg update", "§eVerificar y descargar actualizaciones de GitHub");
+            sendClickable(player, "§a• Recarga en Caliente (Hot-Reload)", "/rpg reload", "§eRecargar configuración, módulos y datos sin reiniciar");
+            sendClickable(player, "§d• Spawnear Élite Ígneo (Molten)", "/rpg spawnelite zombie_lvl1 MOLTEN", "§eSpawnear zombie élite con rastro de fuego");
+            sendClickable(player, "§d• Spawnear Élite Vórtice (Vortex)", "/rpg spawnelite skeleton_lvl5 VORTEX", "§eSpawnear esqueleto élite con tirón de vórtice");
+            sendClickable(player, "§d• Dar Espada Vampírica Legendaria", "/rpg item vampiric_blade", "§eRecibir Vampiric Blade con Omnivampirismo");
+            sendClickable(player, "§d• Spawnear Zombie RPG Lv.1", "/rpg spawnmob zombie_lvl1", "§eSpawnear mob con estadísticas personalizadas");
+            sendClickable(player, "§d• Invocar Jefe de Incursión", "/rpg spawnboss INFERNAL_DRAGON", "§eInvocar Dragón Infernal con telegrafiado de ataques");
+            sendClickable(player, "§d• Añadir 1,000 XP de Clase", "/rpg addxp " + player.getName() + " 1000", "§eAñadir experiencia inmediatamente");
+        }
+        player.sendMessage(ChatColor.GOLD + "══════════════════════════════════════════════════");
+    }
+
+    private void sendClickable(Player player, String text, String command, String hover) {
+        TextComponent component = new TextComponent(text);
+        component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+        component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hover).create()));
+        player.spigot().sendMessage(component);
+    }
+}

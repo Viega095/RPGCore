@@ -1,8 +1,8 @@
 name: RPGCore
 version: ${project.version}
-main: com.antigravity.rpg.RPGCore
+main: com.viega.rpg.RPGCore
 api-version: 1.20
-authors: [Antigravity]
+authors: [Viega095]
 description: A comprehensive RPG plugin.
 
 commands:
