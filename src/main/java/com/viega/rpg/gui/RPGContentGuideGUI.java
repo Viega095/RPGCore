@@ -76,8 +76,10 @@ public class RPGContentGuideGUI implements Listener {
                         "§8▪ §8✦ Sombra Asesina Fantasmal: §7Sigilo y letalidad oscura.",
                         "§8▪ §e✦ Paladín de la Luz Sagrada: §7Ceguera y escudos divinos.",
                         "§8▪ §b✦ Crono-Mago Temporal: §7Distorsión temporal y lentitud.",
-                        "§8▪ §6✦ Caballero del Dragón: §7[NUEVO] Fuego dracónico y escamas.",
-                        "§8▪ §5✦ Nigromante de Almas: §7[NUEVO] Cosecha de vida y almas."
+                        "§8▪ §6✦ Caballero del Dragón: §7Fuego dracónico y escamas.",
+                        "§8▪ §5✦ Nigromante de Almas: §7Cosecha de vida y almas.",
+                        "§8▪ §e✦ Templario de la Aurora Solar: §6[NUEVO] §7Fuego sagrado.",
+                        "§8▪ §b✦ Espectro de la Tormenta: §6[NUEVO] §7Velocidad y relámpago."
                 )));
 
         // Slot 14: Habilidades de Combate & Combos
@@ -101,7 +103,8 @@ public class RPGContentGuideGUI implements Listener {
                         "§8▪ §dAltar de Ascensión de Clase §7- Despertar heroico.",
                         "§8▪ §5Estación de Mazmorras §7- Portales dimensionales.",
                         "§8▪ §6Forja de Joyería y Gemas Rúnicas §7- Orfebrería.",
-                        "§8▪ §bObelisco Rúnico Ancestral §7[NUEVO] - Bendición rúnica.",
+                        "§8▪ §bObelisco Rúnico Ancestral §7- Bendición rúnica.",
+                        "§8▪ §6Forja Rúnica del Titán Herrero §6[NUEVO] §7- Reparación legendaria.",
                         "",
                         "§d✦ Zero-Dupe Garantizado: §7Romper cualquier bloque desmonta",
                         "§7al 100% la estructura y reembolsa exactamente el ítem original."

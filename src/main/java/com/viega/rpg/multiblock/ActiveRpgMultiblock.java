@@ -82,16 +82,15 @@ public class ActiveRpgMultiblock {
             Location lineLoc = hologramCenter.clone().add(0, (lines.size() - 1 - i) * lineSpacing, 0);
 
             try {
-                ArmorStand stand = world.spawn(lineLoc, ArmorStand.class, as -> {
-                    as.setVisible(false);
-                    as.setGravity(false);
-                    as.setMarker(true);
-                    as.setCustomName(line);
-                    as.setCustomNameVisible(true);
-                    as.setInvulnerable(true);
-                    as.setCollidable(false);
-                    as.setBasePlate(false);
-                });
+                ArmorStand stand = (ArmorStand) world.spawnEntity(lineLoc, org.bukkit.entity.EntityType.ARMOR_STAND);
+                stand.setVisible(false);
+                stand.setGravity(false);
+                stand.setMarker(true);
+                stand.setCustomName(line);
+                stand.setCustomNameVisible(true);
+                stand.setInvulnerable(true);
+                stand.setCollidable(false);
+                stand.setBasePlate(false);
                 spawnedEntityUuids.add(stand.getUniqueId());
             } catch (Throwable t) {
                 plugin.getLogger().warning("No se pudo generar holograma para " + type.getId() + ": " + t.getMessage());

@@ -94,6 +94,16 @@ commands:
     description: Open class ascension and awakening altar
     permission: rpg.use
     usage: /ascend
+  eventos:
+    description: Ver la agenda y cronograma de eventos globales del servidor
+    aliases: [agenda, events]
+    permission: rpg.use
+    usage: /eventos
+  suite:
+    description: Panel maestro de administración de la suite de plugins
+    aliases: [mastertest, suitetest]
+    permission: rpg.admin
+    usage: /suite
 
 permissions:
   rpg.admin:

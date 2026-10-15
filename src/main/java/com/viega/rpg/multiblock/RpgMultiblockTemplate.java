@@ -69,6 +69,8 @@ public class RpgMultiblockTemplate {
             case DUNGEON_STATION -> 1.8;
             case RUNIC_JEWELRY_FORGE -> 1.8;
             case ANCIENT_RUNIC_OBELISK -> 2.6;
+            case TITAN_FORGE -> 2.2;
+            case VOID_RIFT_GATEWAY -> 2.4;
         };
     }
 
@@ -93,6 +95,14 @@ public class RpgMultiblockTemplate {
             case ANCIENT_RUNIC_OBELISK:
                 hologramLines.add("§b§l✦ OBELISCO RÚNICO ANCESTRAL ✦");
                 hologramLines.add("§e[Clic Derecho: Canalizar Bendición Celestial]");
+                break;
+            case TITAN_FORGE:
+                hologramLines.add("§6§l🔥 FORJA RÚNICA DEL TITÁN HERRERO 🔥");
+                hologramLines.add("§e[Clic Derecho: Reparación Legendaria & Bendición del Titán]");
+                break;
+            case VOID_RIFT_GATEWAY:
+                hologramLines.add("§5§l✦ GRIETA DEL VACÍO INTERDIMENSIONAL ✦");
+                hologramLines.add("§d[Clic Derecho: Desafío a la Torre Infinita del Abismo]");
                 break;
         }
     }
@@ -203,6 +213,54 @@ public class RpgMultiblockTemplate {
 
                 // Apex cap at y = 3
                 relativeBlocks.put(new BlockOffset(0, 3, 0), Material.AMETHYST_CLUSTER);
+                break;
+
+            case TITAN_FORGE:
+                // Base at 0,0,0
+                relativeBlocks.put(new BlockOffset(0, 0, 0), Material.NETHERITE_BLOCK);
+
+                // Base platform 3x3 at y = 0
+                relativeBlocks.put(new BlockOffset(1, 0, 0), Material.POLISHED_BLACKSTONE);
+                relativeBlocks.put(new BlockOffset(-1, 0, 0), Material.POLISHED_BLACKSTONE);
+                relativeBlocks.put(new BlockOffset(0, 0, 1), Material.POLISHED_BLACKSTONE);
+                relativeBlocks.put(new BlockOffset(0, 0, -1), Material.POLISHED_BLACKSTONE);
+                relativeBlocks.put(new BlockOffset(1, 0, 1), Material.MAGMA_BLOCK);
+                relativeBlocks.put(new BlockOffset(-1, 0, 1), Material.MAGMA_BLOCK);
+                relativeBlocks.put(new BlockOffset(1, 0, -1), Material.MAGMA_BLOCK);
+                relativeBlocks.put(new BlockOffset(-1, 0, -1), Material.MAGMA_BLOCK);
+
+                // Four corner pillars at y = 1
+                relativeBlocks.put(new BlockOffset(1, 1, 1), Material.NETHER_BRICK_FENCE);
+                relativeBlocks.put(new BlockOffset(-1, 1, 1), Material.NETHER_BRICK_FENCE);
+                relativeBlocks.put(new BlockOffset(1, 1, -1), Material.NETHER_BRICK_FENCE);
+                relativeBlocks.put(new BlockOffset(-1, 1, -1), Material.NETHER_BRICK_FENCE);
+
+                // Anvil and forge center at y = 1
+                relativeBlocks.put(new BlockOffset(0, 1, 0), Material.ANVIL);
+                break;
+
+            case VOID_RIFT_GATEWAY:
+                // Base at 0,0,0
+                relativeBlocks.put(new BlockOffset(0, 0, 0), Material.CRYING_OBSIDIAN);
+
+                // Surrounding basalt & soul sand
+                relativeBlocks.put(new BlockOffset(1, 0, 0), Material.POLISHED_BASALT);
+                relativeBlocks.put(new BlockOffset(-1, 0, 0), Material.POLISHED_BASALT);
+                relativeBlocks.put(new BlockOffset(0, 0, 1), Material.POLISHED_BASALT);
+                relativeBlocks.put(new BlockOffset(0, 0, -1), Material.POLISHED_BASALT);
+                relativeBlocks.put(new BlockOffset(1, 0, 1), Material.SOUL_SAND);
+                relativeBlocks.put(new BlockOffset(-1, 0, 1), Material.SOUL_SAND);
+                relativeBlocks.put(new BlockOffset(1, 0, -1), Material.SOUL_SAND);
+                relativeBlocks.put(new BlockOffset(-1, 0, -1), Material.SOUL_SAND);
+
+                // Four corner soul lanterns at y = 1
+                relativeBlocks.put(new BlockOffset(1, 1, 1), Material.SOUL_LANTERN);
+                relativeBlocks.put(new BlockOffset(-1, 1, 1), Material.SOUL_LANTERN);
+                relativeBlocks.put(new BlockOffset(1, 1, -1), Material.SOUL_LANTERN);
+                relativeBlocks.put(new BlockOffset(-1, 1, -1), Material.SOUL_LANTERN);
+
+                // Center core ender portal frame at y = 1
+                relativeBlocks.put(new BlockOffset(0, 1, 0), Material.ENDER_CHEST);
                 break;
         }
     }

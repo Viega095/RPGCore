@@ -92,6 +92,38 @@ public enum RpgMultiblockType {
                     "§8▪ §eRomper cualquier bloque desmonta al 100%.",
                     "§8▪ §eReembolsa el ítem original sin duplicación."
             )
+    ),
+
+    TITAN_FORGE(
+            "TITAN_FORGE",
+            "§6§lForja Rúnica del Titán Herrero",
+            Material.NETHERITE_BLOCK,
+            Arrays.asList(
+                    "§7Estructura RPG desplegable de rango mítico.",
+                    "§7Colócala en el suelo para erigir la forja",
+                    "§7del Titán Herrero con magma y netherite.",
+                    "",
+                    "§8▪ §aForja colosal de netherita y lava sagrada.",
+                    "§8▪ §6Clic derecho repara tu equipo e imbuye Fuerza y Resistencia.",
+                    "§8▪ §eRomper cualquier bloque desmonta al 100%.",
+                    "§8▪ §eReembolsa el ítem original sin duplicación."
+            )
+    ),
+
+    VOID_RIFT_GATEWAY(
+            "VOID_RIFT_GATEWAY",
+            "§5§lGrieta del Vacío Interdimensional",
+            Material.CRYING_OBSIDIAN,
+            Arrays.asList(
+                    "§7Estructura RPG desplegable mística.",
+                    "§7Colócala en el suelo para abrir un portal",
+                    "§7interdimensional hacia las pruebas del vacío.",
+                    "",
+                    "§8▪ §aPortal de obsidiana llorosa, basalto y almas.",
+                    "§8▪ §5Clic derecho para ingresar al Nexo del Abismo.",
+                    "§8▪ §eRomper cualquier bloque desmonta al 100%.",
+                    "§8▪ §eReembolsa el ítem original sin duplicación."
+            )
     );
 
     private final String id;
@@ -205,6 +237,25 @@ public enum RpgMultiblockType {
                 recipe.setIngredient('L', Material.LODESTONE);
                 recipe.setIngredient('N', Material.NETHERITE_INGOT);
                 recipe.setIngredient('C', Material.CRYING_OBSIDIAN);
+                break;
+
+            case TITAN_FORGE:
+                // N: NETHERITE_INGOT, B: NETHERITE_BLOCK, L: LAVA_BUCKET, A: ANVIL, O: OBSIDIAN
+                recipe.shape("NAN", "LBL", "OOO");
+                recipe.setIngredient('N', Material.NETHERITE_INGOT);
+                recipe.setIngredient('A', Material.ANVIL);
+                recipe.setIngredient('L', Material.LAVA_BUCKET);
+                recipe.setIngredient('B', Material.NETHERITE_BLOCK);
+                recipe.setIngredient('O', Material.OBSIDIAN);
+                break;
+
+            case VOID_RIFT_GATEWAY:
+                // C: CRYING_OBSIDIAN, E: ENDER_EYE, B: POLISHED_BASALT, S: SOUL_SAND
+                recipe.shape("ECE", "CBC", "SSS");
+                recipe.setIngredient('E', Material.ENDER_EYE);
+                recipe.setIngredient('C', Material.CRYING_OBSIDIAN);
+                recipe.setIngredient('B', Material.POLISHED_BASALT);
+                recipe.setIngredient('S', Material.SOUL_SAND);
                 break;
         }
 

@@ -110,6 +110,24 @@ public class ClassAscensionManager implements Listener {
                         "  §5• Cosecha de Almas: §fRoba 20% de salud y maná en cada golpe mágico",
                         "  §5• Ráfaga Espectral: §fInvoca espíritus que atormentan y debilitan",
                         "  §5• Vínculo Funesto: §fDebilita el daño de los enemigos cercanos un 25%"
+                )),
+        SOLAR_TEMPLAR("Guerrero", "§e✦ Templario de la Aurora Solar ✦", Material.SUNFLOWER,
+                Arrays.asList(
+                        "§7Canaliza la furia incandescente del astro rey.",
+                        "",
+                        "§6✦ Habilidades del Despertar:",
+                        "  §e• Fulgor Solar: §f+50% Daño con llamaradas de fuego sagrado",
+                        "  §e• Corona de la Aurora: §fOtorga Resistencia III y Regeneración II",
+                        "  §e• Ira del Sol: §fInmunidad a daño de caída y quemaduras"
+                )),
+        STORM_PHANTOM("Asesino", "§b✦ Espectro de la Tormenta Eléctrica ✦", Material.LIGHTNING_ROD,
+                Arrays.asList(
+                        "§7Fúndete con el relámpago y la tempestad sombría.",
+                        "",
+                        "§6✦ Habilidades del Despertar:",
+                        "  §b• Saeta Voltáica: §fTus ataques invocan arcos eléctricos a enemigos cercanos",
+                        "  §b• Paso de la Tempestad: §fVelocidad IV e inmunidad al daño durante 2s tras atacar",
+                        "  §b• Sobrecarga: §f+60% Daño Crítico eléctrico"
                 ));
 
         public final String baseClass;
@@ -435,6 +453,27 @@ public class ClassAscensionManager implements Listener {
                 target.getWorld().spawnParticle(Particle.SOUL, target.getLocation().add(0, 1, 0), 20, 0.4, 0.5, 0.4, 0.05);
                 target.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 60, 1, false, false));
                 player.playSound(player.getLocation(), Sound.PARTICLE_SOUL_ESCAPE, 0.8f, 1.2f);
+                break;
+
+            case SOLAR_TEMPLAR:
+                if (!isArrow) {
+                    event.setDamage(event.getDamage() * 1.50);
+                    target.setFireTicks(120);
+                    target.getWorld().spawnParticle(Particle.FLAME, target.getLocation().add(0, 1, 0), 20, 0.3, 0.3, 0.3, 0.05);
+                    target.getWorld().spawnParticle(Particle.END_ROD, target.getLocation().add(0, 1, 0), 10, 0.2, 0.2, 0.2, 0.05);
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 80, 2, false, false));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 80, 1, false, false));
+                    player.playSound(player.getLocation(), Sound.ITEM_FIRECHARGE_USE, 0.8f, 1.2f);
+                }
+                break;
+
+            case STORM_PHANTOM:
+                if (!isArrow) {
+                    event.setDamage(event.getDamage() * 1.60);
+                    target.getWorld().strikeLightningEffect(target.getLocation());
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, 3, false, false));
+                    player.playSound(player.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.5f, 1.8f);
+                }
                 break;
         }
     }

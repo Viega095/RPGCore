@@ -92,8 +92,7 @@ public class RpgMultiblockManager {
 
         if (!template.checkClearance(placedLoc)) {
             if (player != null) {
-                player.sendMessage("§c[RPGCore] ¡No hay suficiente espacio despejado para desplegar la estructura!");
-                player.sendMessage("§7Asegúrate de que el área alrededor (3x3x2) esté completamente libre.");
+                player.sendMessage("§c[RPGCore] ¡No se puede desplegar la estructura aquí (límite del mundo o bloque protegido)!");
                 player.playSound(placedLoc, Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 0.5f);
             }
             return false;

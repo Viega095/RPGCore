@@ -42,15 +42,20 @@ public class RaidBossEngine {
         Wither boss = (Wither) loc.getWorld().spawnEntity(loc, EntityType.WITHER);
         boss.setCustomName("§4§l✦ " + name + " ✦");
         boss.setCustomNameVisible(true);
-        boss.setMaxHealth(maxHp);
-        boss.setHealth(maxHp);
+        double safeHp = Math.min(maxHp, 2040.0);
+        if (boss.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH) != null) {
+            boss.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).setBaseValue(safeHp);
+        } else {
+            boss.setMaxHealth(safeHp);
+        }
+        boss.setHealth(safeHp);
 
         BossBar bossBar = Bukkit.createBossBar("§4§l" + name, BarColor.PURPLE, BarStyle.SEGMENTED_10);
         for (Player p : Bukkit.getOnlinePlayers()) {
             bossBar.addPlayer(p);
         }
 
-        ActiveRaid raid = new ActiveRaid(boss, name, maxHp, bossBar);
+        ActiveRaid raid = new ActiveRaid(boss, name, safeHp, bossBar);
         activeRaids.put(boss.getUniqueId(), raid);
 
         Bukkit.broadcastMessage(ChatColor.DARK_RED + "========================================");

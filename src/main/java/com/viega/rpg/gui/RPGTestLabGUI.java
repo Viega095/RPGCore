@@ -198,17 +198,33 @@ public class RPGTestLabGUI implements Listener {
         inv.setItem(47, createBtn(Material.FIRE_CHARGE, "§6🐉 Despertar Caballero del Dragón [NUEVO]",
                 Arrays.asList("§7Despierta al instante como Caballero del Dragón", "§7con fuego explosivo y escamas ancestrales.", "", "§6▶ Clic para despertar")));
 
+        // Slot 45: Dar Forja Rúnica del Titán (PDC)
+        inv.setItem(45, createBtn(Material.NETHERITE_BLOCK, "§6§l✦ OBTENER: Forja del Titán (PDC) [NUEVO] ✦",
+                Arrays.asList("§7Entrega 1 bloque crafteable con PDC.", "§7Colócalo en el mundo para construir.", "", "§6▶ Clic para recibir")));
+
         // Slot 48: Despertar Nigromante de Almas [NUEVO]
         inv.setItem(48, createBtn(Material.SOUL_LANTERN, "§5💀 Despertar Nigromante de Almas [NUEVO]",
                 Arrays.asList("§7Despierta al instante como Nigromante de Almas", "§7con robo vampírico y ráfagas espectrales.", "", "§5▶ Clic para despertar")));
+
+        // Slot 49: Spawnear Forja del Titán en Mundo
+        inv.setItem(49, createBtn(Material.LAVA_BUCKET, "§6🔥 Spawnear Forja del Titán en Mundo [NUEVO]",
+                Arrays.asList("§7Autoconstruye la forja mítica del Titán", "§7en tus coordenadas actuales.", "", "§6▶ Clic para desplegar")));
 
         // Slot 50: Guía y Compendio de Contenido RPG [NUEVO]
         inv.setItem(50, createBtn(Material.BOOK, "§6📖 Guía y Compendio de Contenido RPG [NUEVO]",
                 Arrays.asList("§7Abre la enciclopedia de clases, despertar,", "§7estructuras 3D, mazmorras y gemas.", "", "§e▶ Clic para abrir el compendio")));
 
+        // Slot 51: Despertar Templario de la Aurora Solar
+        inv.setItem(51, createBtn(Material.SUNFLOWER, "§e✦ Despertar Templario Solar [NUEVO]",
+                Arrays.asList("§7Despierta como Templario de la Aurora Solar", "§7con fuego sagrado, regeneración y resistencia.", "", "§e▶ Clic para despertar")));
+
         // Slot 52: Spawnear Obelisco Rúnico directo en mundo [NUEVO]
         inv.setItem(52, createBtn(Material.PURPLE_GLAZED_TERRACOTTA, "§b🏛️ Spawnear Obelisco Rúnico en Mundo [NUEVO]",
                 Arrays.asList("§7Autoconstruye el monolito rúnico", "§7en tus coordenadas actuales.", "", "§b▶ Clic para desplegar")));
+
+        // Slot 53: Despertar Espectro de la Tormenta
+        inv.setItem(53, createBtn(Material.LIGHTNING_ROD, "§b⚡ Despertar Espectro Tormenta [NUEVO]",
+                Arrays.asList("§7Despierta como Espectro de la Tormenta Eléctrica", "§7con saetas voltaicas y velocidad extrema.", "", "§b▶ Clic para despertar")));
 
         player.openInventory(inv);
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1f, 1.2f);
@@ -507,6 +523,14 @@ public class RPGTestLabGUI implements Listener {
                 break;
             }
 
+            case 45: { // Dar Forja del Titán (PDC)
+                ItemStack item = plugin.getRpgMultiblockManager().createStructureItem(RpgMultiblockType.TITAN_FORGE);
+                player.getInventory().addItem(item);
+                player.sendMessage("§a[Lab] ✔ ¡Has recibido 1x " + RpgMultiblockType.TITAN_FORGE.getDisplayName() + " §acon metadatos PDC!");
+                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1.2f);
+                break;
+            }
+
             case 46: { // Dar Obelisco Rúnico Ancestral (PDC)
                 ItemStack item = plugin.getRpgMultiblockManager().createStructureItem(RpgMultiblockType.ANCIENT_RUNIC_OBELISK);
                 player.getInventory().addItem(item);
@@ -531,15 +555,37 @@ public class RPGTestLabGUI implements Listener {
                 break;
             }
 
+            case 49: { // Spawnear Forja del Titán en Mundo
+                player.closeInventory();
+                plugin.getRpgMultiblockManager().placeMultiblock(player, player.getLocation().getBlock().getLocation(), RpgMultiblockType.TITAN_FORGE);
+                break;
+            }
+
             case 50: { // Abrir Guía y Compendio RPG
                 player.closeInventory();
                 new RPGContentGuideGUI(plugin).open(player);
                 break;
             }
 
+            case 51: { // Despertar Templario Solar
+                ClassAscensionManager cam = plugin.getClassAscensionManager();
+                if (cam != null) {
+                    cam.forceAscension(player, ClassAscensionManager.AwakenedClass.SOLAR_TEMPLAR);
+                }
+                break;
+            }
+
             case 52: { // Spawnear Obelisco Rúnico en Mundo
                 player.closeInventory();
                 plugin.getRpgMultiblockManager().placeMultiblock(player, player.getLocation().getBlock().getLocation(), RpgMultiblockType.ANCIENT_RUNIC_OBELISK);
+                break;
+            }
+
+            case 53: { // Despertar Espectro Tormenta
+                ClassAscensionManager cam = plugin.getClassAscensionManager();
+                if (cam != null) {
+                    cam.forceAscension(player, ClassAscensionManager.AwakenedClass.STORM_PHANTOM);
+                }
                 break;
             }
         }

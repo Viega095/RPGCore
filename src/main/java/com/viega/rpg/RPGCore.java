@@ -245,8 +245,28 @@ public class RPGCore extends JavaPlugin {
         this.rpgContentGuideGUI = new com.viega.rpg.gui.RPGContentGuideGUI(this);
         getServer().getPluginManager().registerEvents(this.rpgContentGuideGUI, this);
 
+        this.globalEventsGUI = new com.viega.rpg.gui.GlobalEventsGUI(this);
+        getServer().getPluginManager().registerEvents(this.globalEventsGUI, this);
+
+        this.suiteMasterAdminGUI = new com.viega.rpg.gui.SuiteMasterAdminGUI(this);
+        getServer().getPluginManager().registerEvents(this.suiteMasterAdminGUI, this);
+
+        if (getCommand("eventos") != null) {
+            getCommand("eventos").setExecutor(new com.viega.rpg.commands.EventsCommand(this));
+        }
+        if (getCommand("suite") != null) {
+            getCommand("suite").setExecutor(new com.viega.rpg.commands.SuiteCommand(this));
+        }
+
+        this.globalEventScheduler = new com.viega.rpg.events.GlobalEventScheduler(this);
+        this.globalEventScheduler.start();
+
         logger.info("RPGCore enabled successfully!");
     }
+
+    private com.viega.rpg.gui.GlobalEventsGUI globalEventsGUI;
+    private com.viega.rpg.gui.SuiteMasterAdminGUI suiteMasterAdminGUI;
+    private com.viega.rpg.events.GlobalEventScheduler globalEventScheduler;
 
     private com.viega.rpg.gui.RPGTestLabGUI rpgTestLabGUI;
     private com.viega.rpg.gui.RPGContentGuideGUI rpgContentGuideGUI;
@@ -277,6 +297,10 @@ public class RPGCore extends JavaPlugin {
     @Override
     public void onDisable() {
         logger.info("RPGCore disabling...");
+
+        if (globalEventScheduler != null) {
+            globalEventScheduler.stop();
+        }
 
         if (rpgMultiblockManager != null) {
             rpgMultiblockManager.shutdown();
@@ -440,5 +464,13 @@ public class RPGCore extends JavaPlugin {
 
     public com.viega.rpg.multiblock.RpgMultiblockManager getRpgMultiblockManager() {
         return rpgMultiblockManager;
+    }
+
+    public com.viega.rpg.gui.GlobalEventsGUI getGlobalEventsGUI() {
+        return globalEventsGUI;
+    }
+
+    public com.viega.rpg.gui.SuiteMasterAdminGUI getSuiteMasterAdminGUI() {
+        return suiteMasterAdminGUI;
     }
 }

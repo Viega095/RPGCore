@@ -1,6 +1,7 @@
 package com.viega.rpg.bosses;
 
 import com.viega.rpg.RPGCore;
+import com.viega.rpg.events.GlobalEventLock;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -13,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -35,9 +37,18 @@ public class MythicWorldRaidEngine implements Listener {
         return activeBoss != null && activeBoss.isValid() && !activeBoss.isDead();
     }
 
-    public void spawnVoidSovereign(Location loc) {
+    public boolean spawnVoidSovereign(Location loc) {
+        if (GlobalEventLock.isEventActive() && !isRaidActive()) {
+            plugin.getLogger().info("[Raid Xylar] Omitiendo invocación: otro evento global (" + GlobalEventLock.getActiveEventTitle() + ") está activo.");
+            return false;
+        }
+
         if (isRaidActive()) {
             activeBoss.remove();
+        }
+
+        if (!GlobalEventLock.acquireLock(plugin, "Soberano del Vacío Xylar", 600)) {
+            return false;
         }
 
         this.damageDealt.clear();
@@ -100,6 +111,7 @@ public class MythicWorldRaidEngine implements Listener {
                 }
             }
         }.runTaskTimer(plugin, 20L, 1L);
+        return true;
     }
 
     private void executeTelegraphedRaidAttack(Location center) {
@@ -153,10 +165,31 @@ public class MythicWorldRaidEngine implements Listener {
                     p.sendMessage(ChatColor.GREEN + "🏆 [Raid Rank #" + (i + 1) + "] Daño infligido: " + (int) (double) top.get(i).getValue());
                     p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1.2f);
                     p.getInventory().addItem(new ItemStack(Material.NETHER_STAR));
+
+                    // Cross-Plugin Synergy Drop: Fragmento del Vacío de Xylar
+                    ItemStack fragment = new ItemStack(Material.AMETHYST_SHARD);
+                    ItemMeta fMeta = fragment.getItemMeta();
+                    if (fMeta != null) {
+                        fMeta.setDisplayName("§5§l✦ Fragmento del Vacío de Xylar ✦");
+                        fMeta.setLore(Arrays.asList(
+                                "§7Cristal puro arrancado del manto del Soberano del Vacío.",
+                                "§d[Material de Alquimia Suprema]",
+                                "§aTransmutable en la Piedra Filosofal (FlorArcana)",
+                                "§6para forjar el Elixir de Ascensión Astral."
+                        ));
+                        fMeta.getPersistentDataContainer().set(
+                                new NamespacedKey("rpg", "void_fragment"),
+                                org.bukkit.persistence.PersistentDataType.BYTE,
+                                (byte) 1
+                        );
+                        fragment.setItemMeta(fMeta);
+                    }
+                    p.getInventory().addItem(fragment);
                 }
             }
             Bukkit.broadcastMessage(ChatColor.GOLD + "══════════════════════════════════════════════════");
             activeBoss = null;
+            GlobalEventLock.releaseLock(plugin);
         }
     }
 }

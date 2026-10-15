@@ -1,6 +1,7 @@
 package com.viega.rpg.bosses;
 
 import com.viega.rpg.RPGCore;
+import com.viega.rpg.events.GlobalEventLock;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -34,8 +35,18 @@ public class BloodMoonIncursionEngine implements Listener {
         return active;
     }
 
-    public void startBloodMoon(int durationSec) {
-        if (active) return;
+    public boolean startBloodMoon(int durationSec) {
+        if (GlobalEventLock.isEventActive() && !this.active) {
+            plugin.getLogger().info("[Luna de Sangre] Omitiendo inicio: otro evento global (" + GlobalEventLock.getActiveEventTitle() + ") está activo.");
+            return false;
+        }
+
+        if (active) return false;
+
+        if (!GlobalEventLock.acquireLock(plugin, "Luna de Sangre Carmesí", durationSec)) {
+            return false;
+        }
+
         this.active = true;
         this.durationSeconds = durationSec;
 
@@ -87,11 +98,13 @@ public class BloodMoonIncursionEngine implements Listener {
             }
         };
         incursionTask.runTaskTimer(plugin, 20L, 20L);
+        return true;
     }
 
     public void stopBloodMoon() {
         if (!active) return;
         this.active = false;
+        GlobalEventLock.releaseLock(plugin);
         if (bloodMoonBar != null) {
             bloodMoonBar.removeAll();
             bloodMoonBar = null;
@@ -112,7 +125,7 @@ public class BloodMoonIncursionEngine implements Listener {
         if (!active) return;
         if (event.getEntity() instanceof Monster monster) {
             // Empower monster with +100% health and red flame particles
-            double maxHp = monster.getMaxHealth() * 2.0;
+            double maxHp = Math.min(monster.getMaxHealth() * 2.0, 2040.0);
             monster.setMaxHealth(maxHp);
             monster.setHealth(maxHp);
             monster.setCustomName("§4✦ §c" + monster.getName() + " Sanguinario §4✦");
@@ -144,8 +157,15 @@ public class BloodMoonIncursionEngine implements Listener {
             meta.setLore(Arrays.asList(
                     "§7Cristalizada durante la Incursión de la Luna de Sangre.",
                     "§c• Esencia de poder ancestral",
-                    "§6• Moneda de canje para reliquias míticas"
+                    "§d[Material de Alquimia y Forja]",
+                    "§aTransmutable en la Piedra Filosofal (FlorArcana)",
+                    "§6para elaborar el Elixir de Ascensión Astral."
             ));
+            meta.getPersistentDataContainer().set(
+                    new NamespacedKey("rpg", "blood_gem"),
+                    org.bukkit.persistence.PersistentDataType.BYTE,
+                    (byte) 1
+            );
             gem.setItemMeta(meta);
         }
         return gem;
